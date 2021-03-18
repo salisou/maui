@@ -1,0 +1,100 @@
+<Project>
+
+  <PropertyGroup Condition=" '$(MauiPlatformName)' != '' ">
+    <!-- NOTE: $(MauiPlatformName) is expected to be passed in: android, maccatalyst, ios, or windows -->
+    <PackageId>$(PackageId).$(MauiPlatformName)</PackageId>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(MauiPlatformName)' == '' ">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(MSBuildProjectName.Contains('.Ref')) ">
+    <OutputPath>$(DotNetPacksDirectory)$(PackageId)/$(PackageVersion)/</OutputPath>
+    <_FrameworkListFileName>FrameworkList.xml</_FrameworkListFileName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(MSBuildProjectName.Contains('.Runtime')) ">
+    <!-- Eventually, these should move to dotnet/packs: https://github.com/dotnet/sdk/issues/14044 -->
+    <_FrameworkListFileName>RuntimeList.xml</_FrameworkListFileName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Packaging"  Version="6.0.0-beta.21169.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Installers" Version="6.0.0-beta.21169.1" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk" Version="6.0.0-beta.21065.3" />
+  <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetBuildTasksSharedFrameworkTaskFile)"/>
+
+  <ItemGroup>
+    <_TargetPlatform
+        Condition=" '$(MauiPlatformName)' == 'android' "
+        Include="net6.0-android30.0"
+        FullTfm="%(Identity)"
+        Tfm="net6.0-android"
+        Profile="Android"
+    />
+    <_TargetPlatform
+        Condition=" '$(MauiPlatformName)' == 'ios' "
+        Include="net6.0-ios13.6"
+        FullTfm="%(Identity)"
+        Tfm="net6.0-ios"
+        Profile="iOS"
+    />
+    <_TargetPlatform
+        Condition=" '$(MauiPlatformName)' == 'maccatalyst' "
+        Include="net6.0-maccatalyst13.5"
+        FullTfm="%(Identity)"
+        Tfm="net6.0-maccatalyst"
+        Profile="MacCatalyst"
+    />
+    <_TargetPlatform
+        Condition=" '$(MauiPlatformName)' == 'windows' "
+        Include="$(WindowsTargetFramework)"
+        FullTfm="%(Identity)"
+        Tfm="$(WindowsTargetFramework)"
+        Profile="Windows"
+    />
+  </ItemGroup>
+
+  <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
+  <Target Name="_GenerateFrameworkListFile"
+      Condition=" '$(MauiPlatformName)' != '' "
+      BeforeTargets="Build;AssignTargetPaths">
+    <ItemGroup>
+      <_RootAttribute Include="Name" Value=".NET MAUI" />
+      <_RootAttribute Include="TargetFrameworkIdentifier" Value=".NETCoreApp" />
+      <_RootAttribute Include="TargetFrameworkVersion" Value="6.0" />
+      <_RootAttribute Include="FrameworkName" Value="$(MSBuildProjectName.Replace('.Ref','').Replace('.Runtime',''))" />
+      <_AssemblyFiles Include="@(_PackageFiles->WithMetadataValue('Extension', '.dll'))" />
+      <_Classifications Include="@(_AssemblyFiles->'%(FileName)%(Extension)'->Distinct())" Profile="@(_TargetPlatform->'%(Profile)')" />
+    </ItemGroup>
+
+    <!-- https://github.com/dotnet/arcade/blob/1924d7ea148c9f26ca3d82b60f0a775a5389ed22/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/src/CreateFrameworkListFile.cs -->
+    <CreateFrameworkListFile
+        Files="@(_AssemblyFiles)"
+        FileClassifications="@(_Classifications)"
+        TargetFile="$(IntermediateOutputPath)$(_FrameworkListFileName)"
+        TargetFilePrefixes="ref;lib"
+        RootAttributes="@(_RootAttribute)"
+    />
+    <ItemGroup>
+      <FileWrites Include="$(IntermediateOutputPath)$(_FrameworkListFileName)" />
+      <Content Include="$(IntermediateOutputPath)$(_FrameworkListFileName)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="data" Link="data/$(_FrameworkListFileName)" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <_Platforms Include="android;maccatalyst;ios" />
+    <_Platforms Include="windows" Condition=" '$(BuildForWinUI)' == 'true' or '$(Packing)' == 'true' " />
+  </ItemGroup>
+
+  <Target Name="_PackPerPlatform" Condition=" '$(MauiPlatformName)' == '' " AfterTargets="Build">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Pack" Properties="MauiPlatformName=%(_Platforms.Identity)" />
+  </Target>
+
+  <!--
+    HACK: temporarily put runtime packs in 'library-packs', until they can be resolved from 'packs'
+    See: https://github.com/dotnet/sdk/issues/14044
+  -->
+  <Import Condition=" $(MSBuildProjectName.Contains('.Runtime')) " Project="LibraryPacks.targets" />
+
+</Project>

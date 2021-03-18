@@ -1,0 +1,61 @@
+<Project>
+  <PropertyGroup>
+    <MicrosoftMauiControlsSdkVersion>@VERSION@</MicrosoftMauiControlsSdkVersion>
+  </PropertyGroup>
+
+  <!-- Framework references -->
+  <ItemGroup>
+    <_MauiRuntimeIdentifiers Include="android;ios;maccatalyst;windows" />
+    <KnownFrameworkReference
+        Condition=" '$(UseMaui)' == 'true' or '$(UseMauiCore)' == 'true' "
+        Include="Microsoft.Maui.Core"
+        TargetFramework="net6.0"
+        RuntimeFrameworkName="Microsoft.Maui.Core"
+        DefaultRuntimeFrameworkVersion="@VERSION@"
+        LatestRuntimeFrameworkVersion="@VERSION@"
+        TargetingPackName="Microsoft.Maui.Core.Ref.$(TargetPlatformIdentifier.ToLowerInvariant())"
+        TargetingPackVersion="@VERSION@"
+        RuntimePackNamePatterns="Microsoft.Maui.Core.Runtime.**RID**"
+        RuntimePackRuntimeIdentifiers="@(_MauiRuntimeIdentifiers)"
+        Profile="$(TargetPlatformIdentifier)"
+        IsTrimmable="true"
+    />
+    <KnownFrameworkReference
+        Condition=" '$(UseMaui)' == 'true' "
+        Include="Microsoft.Maui.Controls"
+        TargetFramework="net6.0"
+        RuntimeFrameworkName="Microsoft.Maui.Controls"
+        DefaultRuntimeFrameworkVersion="@VERSION@"
+        LatestRuntimeFrameworkVersion="@VERSION@"
+        TargetingPackName="Microsoft.Maui.Controls.Ref.$(TargetPlatformIdentifier.ToLowerInvariant())"
+        TargetingPackVersion="@VERSION@"
+        RuntimePackNamePatterns="Microsoft.Maui.Controls.Runtime.**RID**"
+        RuntimePackRuntimeIdentifiers="@(_MauiRuntimeIdentifiers)"
+        Profile="$(TargetPlatformIdentifier)"
+        IsTrimmable="true"
+    />
+    <KnownFrameworkReference
+        Condition=" '$(UseMaui)' == 'true' or '$(UseMauiEssentials)' == 'true' "
+        Include="Microsoft.Maui.Essentials"
+        TargetFramework="net6.0"
+        RuntimeFrameworkName="Microsoft.Maui.Essentials"
+        DefaultRuntimeFrameworkVersion="@VERSION@"
+        LatestRuntimeFrameworkVersion="@VERSION@"
+        TargetingPackName="Microsoft.Maui.Essentials.Ref.$(TargetPlatformIdentifier.ToLowerInvariant())"
+        TargetingPackVersion="@VERSION@"
+        RuntimePackNamePatterns="Microsoft.Maui.Essentials.Runtime.**RID**"
+        RuntimePackRuntimeIdentifiers="@(_MauiRuntimeIdentifiers)"
+        Profile="$(TargetPlatformIdentifier)"
+        IsTrimmable="true"
+    />
+  </ItemGroup>
+
+  <!-- These implicit <PackageReference/> pull dependencies from NuGet transitively -->
+  <ItemGroup Condition=" '$(UseMaui)' == 'true' or '$(UseMauiCore)' == 'true' or '$(UseMauiEssentials)' == 'true' ">
+    <PackageReference Include="Microsoft.Maui.Dependencies" Version="@VERSION@" IsImplicitlyDefined="true" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(UseMaui)' == 'true' and '$(UsingMicrosoftNETSdkRazor)' == 'true' ">
+    <PackageReference Include="Microsoft.Maui.Controls.BlazorWebView.Dependencies" Version="@VERSION@" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+</Project>
