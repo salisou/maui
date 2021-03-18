@@ -201,6 +201,7 @@
             Targets="GetMauiItems"
             Projects="@(ProjectReference)"
             BuildInParallel="true"
+            Properties="TargetFramework=$(TargetFramework)"
             SkipNonexistentProjects="true"
             SkipNonexistentTargets="true">
             <Output

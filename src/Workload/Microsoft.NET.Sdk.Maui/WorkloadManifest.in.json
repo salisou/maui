@@ -1,0 +1,256 @@
+{
+  "version": 6,
+  "workloads": {
+    "microsoft-maui-controls-sdk-full": {
+      "description": ".NET MAUI SDK for all platforms",
+      "extends": [ 
+        "microsoft-maui-controls-sdk-mobile",
+        "microsoft-maui-controls-sdk-desktop"
+      ]
+    },
+    "microsoft-maui-controls-sdk-mobile": {
+      "description": ".NET MAUI SDK for Mobile",
+      "extends": [ 
+        "microsoft-maui-controls-sdk-android",
+        "microsoft-maui-controls-sdk-ios"
+      ]
+    },
+    "microsoft-maui-controls-sdk-desktop": {
+      "description": ".NET MAUI SDK for Desktop",
+      "extends": [ 
+        "microsoft-maui-controls-sdk-maccatalyst",
+        "microsoft-maui-controls-sdk-windows"
+      ]
+    },
+    "microsoft-maui-controls-sdk-core": {
+      "description": ".NET MAUI SDK Core Packages",
+      "packs": [
+          "Microsoft.Maui.Dependencies",
+          "Microsoft.Maui.Controls.BlazorWebView.Dependencies",
+          "Microsoft.Maui.Controls.Sdk",
+          "Microsoft.Maui.Controls.BlazorWebView.Sdk",
+          "Microsoft.Maui.Resizetizer.Sdk",
+          "Microsoft.Maui.Templates"
+      ]
+    },
+    "microsoft-maui-controls-sdk-android": {
+      "description": ".NET MAUI SDK for Android",
+      "extends": [ 
+        "microsoft-maui-controls-sdk-core",
+        "microsoft-android-sdk-full"
+      ],
+      "packs": [
+          "Microsoft.Maui.Core.Ref.android",
+          "Microsoft.Maui.Core.Runtime.android",
+          "Microsoft.Maui.Controls.BlazorWebView.Ref.android",
+          "Microsoft.Maui.Controls.BlazorWebView.Runtime.android",
+          "Microsoft.Maui.Controls.Ref.android",
+          "Microsoft.Maui.Controls.Runtime.android",
+          "Microsoft.Maui.Essentials.Ref.android",
+          "Microsoft.Maui.Essentials.Runtime.android"
+      ]
+    },
+    "microsoft-maui-controls-sdk-maccatalyst": {
+      "description": ".NET MAUI SDK for Mac Catalyst",
+      "extends": [ 
+        "microsoft-maui-controls-sdk-core",
+        "microsoft-maccatalyst-sdk-full"
+      ],
+      "packs": [
+          "Microsoft.Maui.Core.Ref.maccatalyst",
+          "Microsoft.Maui.Core.Runtime.maccatalyst",
+          "Microsoft.Maui.Controls.BlazorWebView.Ref.maccatalyst",
+          "Microsoft.Maui.Controls.BlazorWebView.Runtime.maccatalyst",
+          "Microsoft.Maui.Controls.Ref.maccatalyst",
+          "Microsoft.Maui.Controls.Runtime.maccatalyst",
+          "Microsoft.Maui.Essentials.Ref.maccatalyst",
+          "Microsoft.Maui.Essentials.Runtime.maccatalyst"
+      ]
+    },
+    "microsoft-maui-controls-sdk-ios": {
+      "description": ".NET MAUI SDK for iOS",
+      "extends": [ 
+        "microsoft-maui-controls-sdk-core",
+        "microsoft-ios-sdk-full"
+      ],
+      "packs": [
+          "Microsoft.Maui.Core.Ref.ios",
+          "Microsoft.Maui.Core.Runtime.ios",
+          "Microsoft.Maui.Controls.BlazorWebView.Ref.ios",
+          "Microsoft.Maui.Controls.BlazorWebView.Runtime.ios",
+          "Microsoft.Maui.Controls.Ref.ios",
+          "Microsoft.Maui.Controls.Runtime.ios",
+          "Microsoft.Maui.Essentials.Ref.ios",
+          "Microsoft.Maui.Essentials.Runtime.ios"
+      ]
+    },
+    "microsoft-maui-controls-sdk-windows": {
+      "description": ".NET MAUI SDK for Windows",
+      "extends": [ "microsoft-maui-controls-sdk-core" ],
+      "packs": [
+          "Microsoft.Maui.Core.Ref.windows",
+          "Microsoft.Maui.Core.Runtime.windows",
+          "Microsoft.Maui.Controls.BlazorWebView.Ref.windows",
+          "Microsoft.Maui.Controls.BlazorWebView.Runtime.windows",
+          "Microsoft.Maui.Controls.Ref.windows",
+          "Microsoft.Maui.Controls.Runtime.windows",
+          "Microsoft.Maui.Essentials.Ref.windows",
+          "Microsoft.Maui.Essentials.Runtime.windows"
+      ]
+    }
+  },
+  "packs": {
+    "Microsoft.Maui.Core.Ref.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Ref.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Ref.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Ref.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Runtime.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Runtime.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Runtime.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Core.Runtime.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Ref.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Ref.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Ref.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Ref.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Runtime.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Runtime.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Runtime.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Runtime.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Ref.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Ref.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Ref.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Ref.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Runtime.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Runtime.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Runtime.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Runtime.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Dependencies": {
+      "kind": "library",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Dependencies": {
+      "kind": "library",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Ref.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Ref.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Ref.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Ref.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Runtime.android": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Runtime.maccatalyst": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Runtime.ios": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Essentials.Runtime.windows": {
+      "kind": "framework",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.BlazorWebView.Sdk": {
+      "kind": "sdk",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Controls.Sdk": {
+      "kind": "sdk",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Resizetizer.Sdk": {
+      "kind": "sdk",
+      "version": "@VERSION@"
+    },
+    "Microsoft.Maui.Templates": {
+      "kind": "template",
+      "version": "@VERSION@"
+    }
+  }
+}

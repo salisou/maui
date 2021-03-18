@@ -44,8 +44,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SingleProject", "SingleProj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resizetizer", "src\SingleProject\Resizetizer\src\Resizetizer.csproj", "{9909F93F-C085-4F76-B92A-5D8C516BF47D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Package-net6", "src\Package\Package-net6.csproj", "{5BEB3326-79B4-438C-BF65-274202F387EC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controls.Xaml-net6", "src\Controls\src\Xaml\Controls.Xaml-net6.csproj", "{CC3D4667-D94E-4276-9311-6439BFD075E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Templates", "src\Templates\src\Microsoft.Maui.Templates.csproj", "{DAAC2822-63B6-4DE0-83AE-04873CD2F364}"
@@ -75,6 +73,36 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiRazorClassLibrarySample", "src\BlazorWebView\samples\MauiRazorClassLibrarySample\MauiRazorClassLibrarySample.csproj", "{4515DAA4-9801-401D-A7A0-38D019B3B19F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controls.SourceGen-net6", "src\Controls\src\SourceGen\Controls.SourceGen-net6.csproj", "{22C17254-2CB4-4AE7-A558-E3208E1D19D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workload", "Workload", "{E06A50AE-F022-4F3D-B4C6-754B6F799707}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.Ref", "src\Workload\Microsoft.Maui.Controls.Ref\Microsoft.Maui.Controls.Ref.csproj", "{D67A1AF8-168A-4BA5-A50C-BC7A931D10B4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.Runtime", "src\Workload\Microsoft.Maui.Controls.Runtime\Microsoft.Maui.Controls.Runtime.csproj", "{CDA6885F-E6E5-49C5-A490-A7131FD9D78A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.Sdk", "src\Workload\Microsoft.Maui.Controls.Sdk\Microsoft.Maui.Controls.Sdk.csproj", "{34BF8612-5006-4D11-AD2F-1D7FC05B58D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Core.Ref", "src\Workload\Microsoft.Maui.Core.Ref\Microsoft.Maui.Core.Ref.csproj", "{C6132E67-E7F0-4305-A1C6-7C80DD8FCDED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Core.Runtime", "src\Workload\Microsoft.Maui.Core.Runtime\Microsoft.Maui.Core.Runtime.csproj", "{BA4694DA-BA89-43A6-A2E9-35897C33D27B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Dependencies", "src\Workload\Microsoft.Maui.Dependencies\Microsoft.Maui.Dependencies.csproj", "{ABB70FE6-7A3E-40E2-89FA-A36D5D2F5E79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Essentials.Ref", "src\Workload\Microsoft.Maui.Essentials.Ref\Microsoft.Maui.Essentials.Ref.csproj", "{5F4FA8DF-6CA3-4A09-8CE0-83807ABAFB56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Essentials.Runtime", "src\Workload\Microsoft.Maui.Essentials.Runtime\Microsoft.Maui.Essentials.Runtime.csproj", "{18271BE6-B8CD-4DE4-9682-AA957191F4BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Resizetizer.Sdk", "src\Workload\Microsoft.Maui.Resizetizer.Sdk\Microsoft.Maui.Resizetizer.Sdk.csproj", "{9122CED3-5D09-43F1-96C7-2E1082649B9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Maui", "src\Workload\Microsoft.NET.Sdk.Maui\Microsoft.NET.Sdk.Maui.csproj", "{0FB73DAD-3070-40E6-9206-5DB929744747}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.BlazorWebView.Dependencies", "src\Workload\Microsoft.Maui.Controls.BlazorWebView.Dependencies\Microsoft.Maui.Controls.BlazorWebView.Dependencies.csproj", "{673124C4-CC7E-4703-B7F7-1EAC5896D5B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.BlazorWebView.Ref", "src\Workload\Microsoft.Maui.Controls.BlazorWebView.Ref\Microsoft.Maui.Controls.BlazorWebView.Ref.csproj", "{CCEFC95C-90A3-4226-BFAE-89F5BAD6B63F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.BlazorWebView.Runtime", "src\Workload\Microsoft.Maui.Controls.BlazorWebView.Runtime\Microsoft.Maui.Controls.BlazorWebView.Runtime.csproj", "{B61E4762-D84A-4E84-8BC0-8CA7F0926B0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Maui.Controls.BlazorWebView.Sdk", "src\Workload\Microsoft.Maui.Controls.BlazorWebView.Sdk\Microsoft.Maui.Controls.BlazorWebView.Sdk.csproj", "{2231CE71-0F07-4DCD-8784-555F3B9B465F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,10 +161,6 @@ Global
 		{9909F93F-C085-4F76-B92A-5D8C516BF47D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9909F93F-C085-4F76-B92A-5D8C516BF47D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9909F93F-C085-4F76-B92A-5D8C516BF47D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BEB3326-79B4-438C-BF65-274202F387EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BEB3326-79B4-438C-BF65-274202F387EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BEB3326-79B4-438C-BF65-274202F387EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BEB3326-79B4-438C-BF65-274202F387EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC3D4667-D94E-4276-9311-6439BFD075E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC3D4667-D94E-4276-9311-6439BFD075E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3D4667-D94E-4276-9311-6439BFD075E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -173,6 +197,62 @@ Global
 		{22C17254-2CB4-4AE7-A558-E3208E1D19D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22C17254-2CB4-4AE7-A558-E3208E1D19D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22C17254-2CB4-4AE7-A558-E3208E1D19D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D67A1AF8-168A-4BA5-A50C-BC7A931D10B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D67A1AF8-168A-4BA5-A50C-BC7A931D10B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D67A1AF8-168A-4BA5-A50C-BC7A931D10B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D67A1AF8-168A-4BA5-A50C-BC7A931D10B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDA6885F-E6E5-49C5-A490-A7131FD9D78A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDA6885F-E6E5-49C5-A490-A7131FD9D78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDA6885F-E6E5-49C5-A490-A7131FD9D78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDA6885F-E6E5-49C5-A490-A7131FD9D78A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34BF8612-5006-4D11-AD2F-1D7FC05B58D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34BF8612-5006-4D11-AD2F-1D7FC05B58D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34BF8612-5006-4D11-AD2F-1D7FC05B58D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34BF8612-5006-4D11-AD2F-1D7FC05B58D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6132E67-E7F0-4305-A1C6-7C80DD8FCDED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6132E67-E7F0-4305-A1C6-7C80DD8FCDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6132E67-E7F0-4305-A1C6-7C80DD8FCDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6132E67-E7F0-4305-A1C6-7C80DD8FCDED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA4694DA-BA89-43A6-A2E9-35897C33D27B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA4694DA-BA89-43A6-A2E9-35897C33D27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA4694DA-BA89-43A6-A2E9-35897C33D27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA4694DA-BA89-43A6-A2E9-35897C33D27B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABB70FE6-7A3E-40E2-89FA-A36D5D2F5E79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB70FE6-7A3E-40E2-89FA-A36D5D2F5E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB70FE6-7A3E-40E2-89FA-A36D5D2F5E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB70FE6-7A3E-40E2-89FA-A36D5D2F5E79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F4FA8DF-6CA3-4A09-8CE0-83807ABAFB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F4FA8DF-6CA3-4A09-8CE0-83807ABAFB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F4FA8DF-6CA3-4A09-8CE0-83807ABAFB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F4FA8DF-6CA3-4A09-8CE0-83807ABAFB56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18271BE6-B8CD-4DE4-9682-AA957191F4BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18271BE6-B8CD-4DE4-9682-AA957191F4BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18271BE6-B8CD-4DE4-9682-AA957191F4BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18271BE6-B8CD-4DE4-9682-AA957191F4BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9122CED3-5D09-43F1-96C7-2E1082649B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9122CED3-5D09-43F1-96C7-2E1082649B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9122CED3-5D09-43F1-96C7-2E1082649B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9122CED3-5D09-43F1-96C7-2E1082649B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FB73DAD-3070-40E6-9206-5DB929744747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB73DAD-3070-40E6-9206-5DB929744747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB73DAD-3070-40E6-9206-5DB929744747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB73DAD-3070-40E6-9206-5DB929744747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{673124C4-CC7E-4703-B7F7-1EAC5896D5B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{673124C4-CC7E-4703-B7F7-1EAC5896D5B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{673124C4-CC7E-4703-B7F7-1EAC5896D5B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{673124C4-CC7E-4703-B7F7-1EAC5896D5B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCEFC95C-90A3-4226-BFAE-89F5BAD6B63F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCEFC95C-90A3-4226-BFAE-89F5BAD6B63F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCEFC95C-90A3-4226-BFAE-89F5BAD6B63F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCEFC95C-90A3-4226-BFAE-89F5BAD6B63F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61E4762-D84A-4E84-8BC0-8CA7F0926B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61E4762-D84A-4E84-8BC0-8CA7F0926B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61E4762-D84A-4E84-8BC0-8CA7F0926B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61E4762-D84A-4E84-8BC0-8CA7F0926B0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2231CE71-0F07-4DCD-8784-555F3B9B465F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2231CE71-0F07-4DCD-8784-555F3B9B465F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2231CE71-0F07-4DCD-8784-555F3B9B465F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2231CE71-0F07-4DCD-8784-555F3B9B465F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,6 +283,20 @@ Global
 		{F9AEE4C0-9E67-4B87-932E-26EDF0FC932A} = {50C758FE-4E10-409A-94F5-A75480960864}
 		{4515DAA4-9801-401D-A7A0-38D019B3B19F} = {1614D1A4-5C3D-4D5B-8C89-426E37A564EF}
 		{22C17254-2CB4-4AE7-A558-E3208E1D19D3} = {50C758FE-4E10-409A-94F5-A75480960864}
+		{D67A1AF8-168A-4BA5-A50C-BC7A931D10B4} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{CDA6885F-E6E5-49C5-A490-A7131FD9D78A} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{34BF8612-5006-4D11-AD2F-1D7FC05B58D7} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{C6132E67-E7F0-4305-A1C6-7C80DD8FCDED} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{BA4694DA-BA89-43A6-A2E9-35897C33D27B} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{ABB70FE6-7A3E-40E2-89FA-A36D5D2F5E79} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{5F4FA8DF-6CA3-4A09-8CE0-83807ABAFB56} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{18271BE6-B8CD-4DE4-9682-AA957191F4BA} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{9122CED3-5D09-43F1-96C7-2E1082649B9C} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{0FB73DAD-3070-40E6-9206-5DB929744747} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{673124C4-CC7E-4703-B7F7-1EAC5896D5B5} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{CCEFC95C-90A3-4226-BFAE-89F5BAD6B63F} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{B61E4762-D84A-4E84-8BC0-8CA7F0926B0A} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
+		{2231CE71-0F07-4DCD-8784-555F3B9B465F} = {E06A50AE-F022-4F3D-B4C6-754B6F799707}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0B8ABEAD-D2B5-4370-A187-62B5ABE4EE50}

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.Build.NoTargets">
+
+  <Import Project="../Shared/Common.targets" />
+
+  <ItemGroup>
+    <!-- Default @(None) items go in the root of the .nupkg -->
+    <None Update="@(None)" PackagePath="" CopyToOutputDirectory="PreserveNewest" Pack="true" />
+  </ItemGroup>
+
+</Project>

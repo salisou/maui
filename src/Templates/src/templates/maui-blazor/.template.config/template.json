@@ -35,12 +35,6 @@
         "dataType": "string",
         "replaces": "MICROSOFT_EXTENSIONS_VERSION",
         "defaultValue": "6.0.0-preview.4.*"
-      },
-      "mauiVersion": {
-        "type": "parameter",
-        "dataType": "string",
-        "replaces": "MAUI_VERSION",
-        "defaultValue": "6.0.100-preview.4.*"
       }
     },
     "defaultName": "MauiApp1"

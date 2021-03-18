@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<UseMaui>true</UseMaui>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net6.0-windows10.0.19041</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -12,15 +13,6 @@
 		<EnableDefaultApplicationDefinition>False</EnableDefaultApplicationDefinition>
 		<StartupObject>MauiApp1.WinUI.Program</StartupObject>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.ProjectReunion" Version="[0.5.6]">
-			<IncludeAssets>build</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Maui" Version="MAUI_VERSION" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="MAUI_VERSION" />
-		<PackageReference Include="Microsoft.Maui.Resizetizer" Version="MAUI_VERSION" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.19041.16" />
