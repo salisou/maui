@@ -30,7 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuspec", ".nuspec", "{7E12
 		.nuspec\Microsoft.Maui.Controls.SingleProject.targets = .nuspec\Microsoft.Maui.Controls.SingleProject.targets
 		.nuspec\Microsoft.Maui.Controls.targets = .nuspec\Microsoft.Maui.Controls.targets
 		.nuspec\Microsoft.Maui.Resizetizer.targets = .nuspec\Microsoft.Maui.Resizetizer.targets
-		eng\package.ps1 = eng\package.ps1
 		.nuspec\proguard.cfg = .nuspec\proguard.cfg
 	EndProjectSection
 EndProject
