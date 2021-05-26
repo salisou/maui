@@ -1,6 +1,8 @@
 <Project>
 
-  <Target Name="_CopyToLibraryPacks" AfterTargets="Pack" Condition=" '$(IsPackable)' == 'true' ">
+  <Target Name="_CopyToLibraryPacks"
+      AfterTargets="Pack"
+      Condition=" '$(CopyWorkloadToOutputPath)' == 'true' and '$(IsPackable)' == 'true' ">
     <ItemGroup>
       <_PackagesToCopy Include="$(PackageOutputPath)/$(PackageId).*.nupkg" />
     </ItemGroup>

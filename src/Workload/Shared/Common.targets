@@ -8,6 +8,6 @@
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <IncludeSymbols>false</IncludeSymbols>
     <NoWarn>$(NoWarn);NU5100;NU5128;NU5130;NU5131</NoWarn>
-    <OutputPath>$(DotNetPacksDirectory)$(PackageId)/$(PackageVersion)/</OutputPath>
+    <OutputPath Condition=" '$(CopyWorkloadToOutputPath)' == 'true' ">$(DotNetPacksDirectory)$(PackageId)/$(PackageVersion)/</OutputPath>
   </PropertyGroup>
 </Project>

@@ -21,7 +21,9 @@
     <Compile Remove="**\*" />
   </ItemGroup>
 
-  <Target Name="_CopyToTemplatePacks" AfterTargets="Pack">
+  <Target Name="_CopyToTemplatePacks"
+      AfterTargets="Pack"
+      Condition=" '$(CopyWorkloadToOutputPath)' == 'true' ">
     <ItemGroup>
       <_PackagesToCopy Include="$(PackageOutputPath)/$(PackageId).*.nupkg" />
     </ItemGroup>
