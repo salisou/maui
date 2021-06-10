@@ -2,6 +2,7 @@
 
   <Import Project="../Shared/Common.targets" />
   <Import Project="../Shared/Frameworks.targets" />
+  <Import Project="../Shared/Microsoft.Extensions.targets" />
 
   <!-- Android-only files -->
   <ItemGroup Condition=" '$(MauiPlatformName)' == 'android' ">
