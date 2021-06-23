@@ -1,0 +1,15 @@
+<!-- Imported when $(BuildingInsideVisualStudio) is true -->
+<Project>
+  <!--
+    Enables the IDE to pass $(_SelectedTargetFramework) as a way to improve build performance.
+    This is hopefully temporary, and the VS Project System would support this at some point.
+    $(_DisableSelectedTargetFramework) is an escape hatch to turn this behavior off.
+  -->
+  <Target Name="_ComputeMauiTargetFrameworks"
+      Condition=" '$(SingleProject)' == 'true' and '$(_DisableSelectedTargetFramework)' != 'true' "
+      BeforeTargets="_ComputeTargetFrameworkItems">
+    <PropertyGroup>
+      <TargetFrameworks Condition=" '$(TargetFramework)' == '' and '$(_SelectedTargetFramework)' != '' ">$(_SelectedTargetFramework)</TargetFrameworks>
+    </PropertyGroup>
+  </Target>
+</Project>
