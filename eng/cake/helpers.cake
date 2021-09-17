@@ -2,22 +2,22 @@ Task("Clean")
     .Description("Deletes all the obj/bin directories")
     .Does(() =>
 {
-    List<string> foldersToClean = new List<string>();
+    // List<string> foldersToClean = new List<string>();
 
-    foreach (var item in new [] {"obj", "bin"})
-    {
-        foreach(string f in System.IO.Directory.GetDirectories(".", item, SearchOption.AllDirectories))
-        {
-            if(f.StartsWith(@".\bin") || f.StartsWith(@".\tools"))
-                continue;
+    // foreach (var item in new [] {"obj", "bin"})
+    // {
+    //     foreach(string f in System.IO.Directory.GetDirectories(".", item, SearchOption.AllDirectories))
+    //     {
+    //         if(f.StartsWith(@".\bin") || f.StartsWith(@".\tools"))
+    //             continue;
 
-            // this is here as a safety check
-            if(!f.StartsWith(@".\src"))
-                continue;
+    //         // this is here as a safety check
+    //         if(!f.StartsWith(@".\src"))
+    //             continue;
 
-            CleanDirectories(f);
-        }        
-    } 
+    //         CleanDirectories(f);
+    //     }        
+    // } 
 });
 
 
