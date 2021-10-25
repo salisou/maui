@@ -1,3 +1,6 @@
+// NOTE: this class has a performance impact
+// Run src/Core/tests/Benchmarks/Benchmarks/PropertyMapperBenchmarker.cs to measure future changes
+
 using System;
 using System.Collections.Generic;
 using Microsoft.Maui.Handlers;
@@ -9,10 +12,6 @@ namespace Microsoft.Maui
 		readonly Dictionary<string, Action<IElementHandler, IElement>> _mapper = new();
 
 		IPropertyMapper[]? _chained;
-
-		// Keep a distinct list of the keys so we don't run any duplicate (overridden) updates more than once
-		// when we call UpdateProperties
-		HashSet<string>? _updateKeys;
 
 		public PropertyMapper()
 		{
@@ -26,7 +25,6 @@ namespace Microsoft.Maui
 		protected virtual void SetPropertyCore(string key, Action<IElementHandler, IElement> action)
 		{
 			_mapper[key] = action;
-			ClearKeyCache();
 		}
 
 		protected virtual void UpdatePropertyCore(string key, IElementHandler viewHandler, IElement virtualView)
@@ -65,7 +63,7 @@ namespace Microsoft.Maui
 			if (virtualView == null)
 				return;
 
-			foreach (var key in UpdateKeys)
+			foreach (var key in _mapper.Keys)
 			{
 				UpdatePropertyCore(key, viewHandler, virtualView);
 			}
@@ -74,32 +72,8 @@ namespace Microsoft.Maui
 		public IPropertyMapper[]? Chained
 		{
 			get => _chained;
-			set
-			{
-				_chained = value;
-				ClearKeyCache();
-			}
+			set => _chained = value;
 		}
-
-		protected HashSet<string> PopulateKeys(ref HashSet<string>? returnList)
-		{
-			_updateKeys = new HashSet<string>();
-
-			foreach (var key in GetKeys())
-			{
-				_updateKeys.Add(key);
-			}
-
-			return returnList ?? new HashSet<string>();
-		}
-
-		protected virtual void ClearKeyCache()
-		{
-			_updateKeys = null;
-		}
-
-		public virtual IReadOnlyCollection<string> UpdateKeys =>
-			_updateKeys ?? PopulateKeys(ref _updateKeys);
 
 		public IEnumerable<string> GetKeys()
 		{
