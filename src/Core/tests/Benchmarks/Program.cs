@@ -1,13 +1,9 @@
 using BenchmarkDotNet.Running;
 
-namespace Microsoft.Maui.Handlers.Benchmarks
-{
-	class Program
-	{
-		static void Main(string[] args)
-		{
-			//BenchmarkRunner.Run<MauiServiceProviderBenchmarker>();
-			BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).RunAllJoined();
-		}
-	}
-}
+var switcher = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly);
+
+// Prompt which one to run
+switcher.Run(args);
+
+// Or uncomment to run all
+// switcher.RunAllJoined();
