@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Maui.Hosting;
@@ -36,6 +37,7 @@ namespace Microsoft.Maui.HotReload
 
 		public static List<MethodInfo> GetOnHotReloadMethods(this Type type) => getOnHotReloadMethods(type).Distinct(new ReflectionMethodComparer()).ToList();
 
+		[UnconditionalSuppressMessage("Trimming", "IL2080", Justification = TrimmerHelper.HotReload)]
 		static IEnumerable<MethodInfo> getOnHotReloadMethods(Type type, bool isSubclass = false)
 		{
 			var flags = BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.NonPublic;

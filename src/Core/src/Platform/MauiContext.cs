@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Animations;
 
@@ -67,38 +68,44 @@ namespace Microsoft.Maui
 		internal void AddSpecific<TService>(TService instance)
 			where TService : class
 		{
-			_services.AddSpecific(typeof(TService), () => instance);
+#if NETSTANDARD2_0
+			var lazy = new Lazy<object?>(() => instance);
+#else
+			var lazy = new Lazy<object?>(instance);
+#endif
+			_services.AddSpecific(typeof(TService), lazy);
 		}
 
 		internal void AddWeakSpecific<TService>(TService instance)
 			where TService : class
 		{
 			var weak = new WeakReference(instance);
+			var lazy = new Lazy<object?>(() => weak.Target);
 
-			_services.AddSpecific(typeof(TService), () => weak.Target);
+			_services.AddSpecific(typeof(TService), lazy);
 		}
 
-		internal void AddSpecific<TService>(Func<TService> factory)
+		internal void AddSpecific<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TService>(Func<TService> factory)
 			where TService : class
 		{
-			var lazy = new Lazy<TService>(() => factory());
+			var lazy = new Lazy<object?>(factory);
 
-			_services.AddSpecific(typeof(TService), () => lazy.Value);
+			_services.AddSpecific(typeof(TService), lazy);
 		}
 
-		internal void AddSpecific<TService, TImplementation>(Func<TImplementation> factory)
+		internal void AddSpecific<TService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(Func<TImplementation> factory)
 			where TService : class
 			where TImplementation : class, TService
 		{
-			var lazy = new Lazy<TImplementation>(() => factory());
+			var lazy = new Lazy<object?>(factory);
 
-			_services.AddSpecific(typeof(TService), () => lazy.Value);
+			_services.AddSpecific(typeof(TService), lazy);
 		}
 
 		class WrappedServiceProvider : IServiceProvider
 		{
 			readonly IServiceProvider _serviceProvider;
-			readonly ConcurrentDictionary<Type, Func<object?>> _scopeStatic = new();
+			readonly ConcurrentDictionary<Type, Lazy<object?>> _scopeStatic = new();
 
 			public WrappedServiceProvider(IServiceProvider serviceProvider)
 			{
@@ -108,12 +115,12 @@ namespace Microsoft.Maui
 			public object? GetService(Type serviceType)
 			{
 				if (_scopeStatic.TryGetValue(serviceType, out var getter))
-					return getter.Invoke();
+					return getter.Value;
 
 				return _serviceProvider.GetService(serviceType);
 			}
 
-			public void AddSpecific(Type type, Func<object?> getter)
+			public void AddSpecific(Type type, Lazy<object?> getter)
 			{
 				_scopeStatic[type] = getter;
 			}

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,8 @@ namespace Microsoft.Maui.HotReload
 				return false;
 			return newView.GetType() == newViewType;
 		}
+
+		[UnconditionalSuppressMessage("Trimming", "IL2062", Justification = TrimmerHelper.HotReload)]
 		public static IView GetReplacedView(IHotReloadableView view)
 		{
 			if (!IsEnabled)
@@ -94,6 +97,8 @@ namespace Microsoft.Maui.HotReload
 		static Dictionary<string, Type> replacedViews = new Dictionary<string, Type>();
 		static Dictionary<IHotReloadableView, object[]> currentViews = new Dictionary<IHotReloadableView, object[]>();
 		static Dictionary<string, List<KeyValuePair<Type, Type>>> replacedHandlers = new Dictionary<string, List<KeyValuePair<Type, Type>>>();
+
+		[UnconditionalSuppressMessage("Trimming", "IL2026", Justification = TrimmerHelper.HotReload)]
 		public static void RegisterReplacedView(string oldViewType, Type newViewType)
 		{
 			if (!IsEnabled)
@@ -130,7 +135,7 @@ namespace Microsoft.Maui.HotReload
 
 				_ = HandlerService ?? throw new ArgumentNullException(nameof(HandlerService));
 				var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-				var t = assemblies.Select(x => x.GetType(oldViewType)).FirstOrDefault(x => x != null);
+				var t = GetType(oldViewType);
 
 				var views = HandlerService!.Where(x => x.ImplementationType == t).Select(x => new KeyValuePair<Type, Type>(x.ServiceType, x.ImplementationType!)).ToList();
 
@@ -144,6 +149,21 @@ namespace Microsoft.Maui.HotReload
 
 		}
 
+		[UnconditionalSuppressMessage("Trimming", "IL2026", Justification = TrimmerHelper.HotReload)]
+		static Type? GetType (string oldViewType)
+		{
+			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				var t = assembly.GetType(oldViewType);
+				if (t != null)
+					return t;
+			}
+			return null;
+		}
+
+		[UnconditionalSuppressMessage("Trimming", "IL2055", Justification = TrimmerHelper.HotReload)]
+		[UnconditionalSuppressMessage("Trimming", "IL2067", Justification = TrimmerHelper.HotReload)]
+		[UnconditionalSuppressMessage("Trimming", "IL2072", Justification = TrimmerHelper.HotReload)]
 
 		static void RegisterHandler(KeyValuePair<Type, Type> pair, Type newHandler)
 		{
