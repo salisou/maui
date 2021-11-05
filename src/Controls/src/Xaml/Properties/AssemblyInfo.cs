@@ -1,8 +1,10 @@
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Internals;
 
+[assembly: AssemblyMetadata ("IsTrimmable", "True")]
 [assembly: InternalsVisibleTo("Microsoft.Maui.Controls.Xaml.UnitTests")]
 [assembly: InternalsVisibleTo("Microsoft.Maui.Controls.Build.Tasks")]
 [assembly: InternalsVisibleTo("Microsoft.Maui.Controls.Xaml.Design")]

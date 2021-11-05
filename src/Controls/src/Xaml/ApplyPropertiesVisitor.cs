@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -312,7 +313,7 @@ namespace Microsoft.Maui.Controls.Xaml
 			return false;
 		}
 
-		static BindableProperty GetBindableProperty(Type elementType, string localName, IXmlLineInfo lineInfo,
+		static BindableProperty GetBindableProperty([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] Type elementType, string localName, IXmlLineInfo lineInfo,
 			bool throwOnError = false)
 		{
 #if NETSTANDARD1_0
@@ -342,14 +343,14 @@ namespace Microsoft.Maui.Controls.Xaml
 		{
 			var localName = propertyName.LocalName;
 			//If it's an attached BP, update elementType and propertyName
-			var bpOwnerType = xamlelement.GetType();
+			var bpOwnerType = GetTypePreserveFields(xamlelement);
 			GetRealNameAndType(ref bpOwnerType, propertyName.NamespaceURI, ref localName, rootElement, lineInfo);
 			var property = GetBindableProperty(bpOwnerType, localName, lineInfo, false);
 
 			if (property != null)
 				return property;
 
-			var elementType = xamlelement.GetType();
+			var elementType = GetTypePreserveProperties(xamlelement);
 			var propertyInfo = elementType.GetRuntimeProperties().FirstOrDefault(p => p.Name == localName);
 			return propertyInfo;
 		}
@@ -438,7 +439,7 @@ namespace Microsoft.Maui.Controls.Xaml
 			targetProperty = null;
 
 			//If it's an attached BP, update elementType and propertyName
-			var bpOwnerType = xamlElement.GetType();
+			var bpOwnerType = GetTypePreserveFields(xamlElement);
 			var attached = GetRealNameAndType(ref bpOwnerType, propertyName.NamespaceURI, ref localName, rootElement, lineInfo);
 			var property = GetBindableProperty(bpOwnerType, localName, lineInfo, false);
 
@@ -462,7 +463,7 @@ namespace Microsoft.Maui.Controls.Xaml
 			if (attached)
 				return false;
 
-			var elementType = element.GetType();
+			var elementType = GetTypePreserveEvents(element);
 			var eventInfo = elementType.GetRuntimeEvent(localName);
 			var stringValue = value as string;
 
@@ -557,29 +558,9 @@ namespace Microsoft.Maui.Controls.Xaml
 
 			Func<MemberInfo> minforetriever;
 			if (attached)
-				minforetriever = () =>
-				{
-					try
-					{
-						return property.DeclaringType.GetRuntimeMethod("Get" + property.PropertyName, new[] { typeof(BindableObject) });
-					}
-					catch (AmbiguousMatchException e)
-					{
-						throw new XamlParseException($"Multiple methods with name '{property.DeclaringType}.Get{property.PropertyName}' found.", lineInfo, innerException: e);
-					}
-				};
+				minforetriever = () => GetGetMethod(property, lineInfo);
 			else
-				minforetriever = () =>
-				{
-					try
-					{
-						return property.DeclaringType.GetRuntimeProperty(property.PropertyName);
-					}
-					catch (AmbiguousMatchException e)
-					{
-						throw new XamlParseException($"Multiple properties with name '{property.DeclaringType}.{property.PropertyName}' found.", lineInfo, innerException: e);
-					}
-				};
+				minforetriever = () => GetProperty(property, lineInfo);
 			var convertedValue = value.ConvertTo(property.ReturnType, minforetriever, serviceProvider, out exception);
 			if (exception != null)
 				return false;
@@ -613,6 +594,30 @@ namespace Microsoft.Maui.Controls.Xaml
 
 			exception = new XamlParseException($"{elementType.Name} is not a BindableObject or does not support setting native BindableProperties", lineInfo);
 			return false;
+		}
+
+		static MethodInfo GetGetMethod(BindableProperty property, IXmlLineInfo lineInfo)
+		{
+			try
+			{
+				return property.DeclaringType.GetRuntimeMethod("Get" + property.PropertyName, new[] { typeof(BindableObject) });
+			}
+			catch (AmbiguousMatchException e)
+			{
+				throw new XamlParseException($"Multiple methods with name '{property.DeclaringType}.Get{property.PropertyName}' found.", lineInfo, innerException: e);
+			}
+		}
+
+		static PropertyInfo GetProperty(BindableProperty property, IXmlLineInfo lineInfo)
+		{
+			try
+			{
+				return property.DeclaringType.GetRuntimeProperty(property.PropertyName);
+			}
+			catch (AmbiguousMatchException e)
+			{
+				throw new XamlParseException($"Multiple properties with name '{property.DeclaringType}.{property.PropertyName}' found.", lineInfo, innerException: e);
+			}
 		}
 
 		static bool TryGetValue(object element, BindableProperty property, bool attached, out object value, IXmlLineInfo lineInfo, out Exception exception, out object targetProperty)
@@ -732,7 +737,7 @@ namespace Microsoft.Maui.Controls.Xaml
 			if (exception != null)
 				return false;
 
-			var addMethod = collection.GetType().GetRuntimeMethods().First(mi => mi.Name == "Add" && mi.GetParameters().Length == 1);
+			var addMethod = GetTypePreserveMethods(collection).GetRuntimeMethods().First(mi => mi.Name == "Add" && mi.GetParameters().Length == 1);
 			if (addMethod == null)
 				return false;
 
@@ -749,6 +754,22 @@ namespace Microsoft.Maui.Controls.Xaml
 			}
 			return exception == null;
 		}
+
+		[UnconditionalSuppressMessage("Trimming", "IL2073", Justification = "We cannot specify DynamicallyAccessedMemberTypes on object.GetType().")]
+		[return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+		static Type GetTypePreserveMethods(object obj) => obj.GetType();
+
+		[UnconditionalSuppressMessage("Trimming", "IL2073", Justification = "We cannot specify DynamicallyAccessedMemberTypes on object.GetType().")]
+		[return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)]
+		static Type GetTypePreserveFields(object obj) => obj.GetType();
+
+		[UnconditionalSuppressMessage("Trimming", "IL2073", Justification = "We cannot specify DynamicallyAccessedMemberTypes on object.GetType().")]
+		[return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)]
+		static Type GetTypePreserveProperties(object obj) => obj.GetType();
+
+		[UnconditionalSuppressMessage("Trimming", "IL2073", Justification = "We cannot specify DynamicallyAccessedMemberTypes on object.GetType().")]
+		[return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)]
+		static Type GetTypePreserveEvents(object obj) => obj.GetType();
 
 		static bool TryAddToResourceDictionary(ResourceDictionary resourceDictionary, object value, string xKey, IXmlLineInfo lineInfo, out Exception exception)
 		{
@@ -816,11 +837,14 @@ namespace Microsoft.Maui.Controls.Xaml
 			return exception == null;
 		}
 
-		static IEnumerable<MethodInfo> GetAllRuntimeMethods(Type type)
+		[UnconditionalSuppressMessage("Trimming", "IL2111", Justification = "Trimmer can't guarantee availability of the requirements of the method.")]
+		static IEnumerable<MethodInfo> GetAllRuntimeMethods([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type type)
 		{
 			return type.GetRuntimeMethods()
-				.Concat(type.GetTypeInfo().ImplementedInterfaces.SelectMany(t => t.GetRuntimeMethods()));
+				.Concat(type.GetTypeInfo().ImplementedInterfaces.SelectMany(GetRuntimeMethods));
 		}
+
+		static IEnumerable<MethodInfo> GetRuntimeMethods([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type type) => type.GetRuntimeMethods();
 
 		bool TrySetRuntimeName(XmlName propertyName, object source, object value, ValueNode node)
 		{

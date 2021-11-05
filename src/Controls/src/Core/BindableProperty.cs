@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -105,6 +106,7 @@ namespace Microsoft.Maui.Controls
 			DefaultValueCreator = defaultValueCreator;
 		}
 
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
 		public Type DeclaringType { get; private set; }
 
 		public BindingMode DefaultBindingMode { get; private set; }
@@ -115,6 +117,7 @@ namespace Microsoft.Maui.Controls
 
 		public string PropertyName { get; }
 
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces | DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
 		public Type ReturnType { get; }
 
 		internal BindablePropertyBindingChanging BindingChanging { get; private set; }
