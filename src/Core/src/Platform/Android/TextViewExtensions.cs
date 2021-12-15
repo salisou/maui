@@ -117,16 +117,9 @@ namespace Microsoft.Maui.Platform
 		public static void UpdateTextDecorations(this TextView textView, ILabel label)
 		{
 			var textDecorations = label.TextDecorations;
-
-			if ((textDecorations & TextDecorations.Strikethrough) == 0)
-				textView.PaintFlags &= ~PaintFlags.StrikeThruText;
-			else
-				textView.PaintFlags |= PaintFlags.StrikeThruText;
-
-			if ((textDecorations & TextDecorations.Underline) == 0)
-				textView.PaintFlags &= ~PaintFlags.UnderlineText;
-			else
-				textView.PaintFlags |= PaintFlags.UnderlineText;
+			ViewHelper.SetPaintFlags(textView,
+				strikeThrough: (textDecorations & TextDecorations.Strikethrough) != 0,
+				underline: (textDecorations & TextDecorations.Underline) != 0);
 		}
 
 		public static void UpdateFlowDirection(this TextView nativeView, IView view)

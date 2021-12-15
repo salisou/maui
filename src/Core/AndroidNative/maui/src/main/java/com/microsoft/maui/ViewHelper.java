@@ -1,8 +1,11 @@
 package com.microsoft.maui;
 
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.TextView;
 
 public class ViewHelper {
     public static void requestLayoutIfNeeded(View view)
@@ -31,7 +34,7 @@ public class ViewHelper {
             view.setPivotY(pivotY);
     }
 
-    public static void set(
+    public static void setView(
         View view,
         int automationTagId,
         String automationId,
@@ -68,5 +71,72 @@ public class ViewHelper {
         view.setRotationY(rotationY);
         setPivotXIfNeeded(view, pivotX);
         setPivotYIfNeeded(view, pivotY);
+    }
+
+    public static void setPaintFlags(TextView textView, boolean strikeThrough, boolean underline)
+    {
+        int paintFlags = textView.getPaintFlags();
+        if (strikeThrough)
+            paintFlags |= Paint.STRIKE_THRU_TEXT_FLAG;
+        else
+            paintFlags &= ~Paint.STRIKE_THRU_TEXT_FLAG;
+        if (underline)
+            paintFlags |= Paint.UNDERLINE_TEXT_FLAG;
+        else
+            paintFlags &= ~Paint.UNDERLINE_TEXT_FLAG;
+        textView.setPaintFlags(paintFlags);
+    }
+
+    public static void setTextView(
+        TextView textView,
+        int automationTagId,
+        String automationId,
+        int visibility,
+        int layoutDirection,
+        int minimumHeight,
+        int minimumWidth,
+        boolean enabled,
+        float alpha,
+        float translationX,
+        float translationY,
+        float scaleX,
+        float scaleY,
+        float rotation,
+        float rotationX,
+        float rotationY,
+        float pivotX,
+        float pivotY,
+        float letterSpacing,
+        Typeface typeface,
+        int textSizeUnit,
+        float textSize,
+        int textAlignment,
+        int gravity,
+        boolean singleLine,
+        int maxLines,
+        int lineSpacing,
+        int paddingLeft,
+        int paddingTop,
+        int paddingRight,
+        int paddingBottom,
+        CharSequence text,
+        int textColor,
+        boolean strikeThrough,
+        boolean underline)
+    {
+        setView(textView, automationTagId, automationId, visibility, layoutDirection, minimumHeight, minimumWidth, enabled, alpha, translationX, translationY, scaleX, scaleY, rotation, rotationX, rotationY, pivotX, pivotY);
+
+        textView.setLetterSpacing(letterSpacing);
+        textView.setTypeface(typeface);
+        textView.setTextSize(textSizeUnit, textSize);
+        textView.setTextAlignment(textAlignment);
+        textView.setGravity(gravity);
+        textView.setSingleLine(singleLine);
+        textView.setMaxLines(maxLines);
+        textView.setLineSpacing(0, lineSpacing);
+        textView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        textView.setText(text);
+        textView.setTextColor(textColor);
+        setPaintFlags(textView, strikeThrough, underline);
     }
 }

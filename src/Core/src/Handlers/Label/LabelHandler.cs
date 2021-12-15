@@ -3,7 +3,13 @@ namespace Microsoft.Maui.Handlers
 {
 	public partial class LabelHandler
 	{
-		public static IPropertyMapper<ILabel, LabelHandler> LabelMapper = new PropertyMapper<ILabel, LabelHandler>(ViewHandler.ViewMapper)
+		public static IPropertyMapper<ILabel, LabelHandler> LabelMapper =
+#if ANDROID
+		// Use a custom mapper for Android which knows how to batch the initial property sets
+		new AndroidBatchPropertyMapper<IView, IViewHandler>(ViewHandler.ViewMapper)
+#else
+		new PropertyMapper<ILabel, LabelHandler>(ViewHandler.ViewMapper)
+#endif
 		{
 #if WINDOWS || __IOS__
 			[nameof(ILabel.Background)] = MapBackground,

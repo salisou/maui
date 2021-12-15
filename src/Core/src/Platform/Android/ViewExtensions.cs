@@ -37,8 +37,53 @@ namespace Microsoft.Maui.Platform
 				visibility = (int)view.Visibility.ToNativeVisibility();
 			}
 
-			// NOTE: use named arguments for clarity
-			ViewHelper.Set(nativeView,
+			if (view is ILabel label && nativeView is TextView textView)
+			{
+				using Java.Lang.String? text = textView.Text == null ? null : new(textView.Text);
+				var textDecorations = label.TextDecorations;
+				ViewHelper.SetTextView(
+					textView: textView,
+					automationTagId: AutomationTagId,
+					automationId: view.AutomationId,
+					visibility: visibility,
+					layoutDirection: (int)GetLayoutDirection(view),
+					minimumHeight: (int)context.ToPixels(view.MinimumHeight),
+					minimumWidth: (int)context.ToPixels(view.MinimumWidth),
+					enabled: view.IsEnabled,
+					alpha: (float)view.Opacity,
+					translationX: context.ToPixels(view.TranslationX),
+					translationY: context.ToPixels(view.TranslationY),
+					scaleX: (float)(view.Scale * view.ScaleX),
+					scaleY: (float)(view.Scale * view.ScaleY),
+					rotation: (float)view.Rotation,
+					rotationX: (float)view.RotationX,
+					rotationY: (float)view.RotationY,
+					pivotX: pivotX,
+					pivotY: pivotY,
+					//TODO: do all these
+					letterSpacing: default,
+					typeface: default,
+					textSizeUnit: default,
+					textSize: default,
+					textAlignment: default,
+					gravity: default,
+					singleLine: default,
+					maxLines: default,
+					lineSpacing: default,
+					paddingLeft: default,
+					paddingTop: default,
+					paddingRight: default,
+					paddingBottom: default,
+					text: text,
+					textColor: default,
+					strikeThrough: (textDecorations & TextDecorations.Strikethrough) != 0,
+					underline: (textDecorations & TextDecorations.Underline) != 0
+				);
+				return;
+			}
+
+			ViewHelper.SetView(
+				view: nativeView,
 				automationTagId: AutomationTagId,
 				automationId: view.AutomationId,
 				visibility: visibility,
