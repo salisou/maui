@@ -36,21 +36,14 @@ namespace Microsoft.Maui.Platform
 				textView.SetTextColor(textColor.Value);
 		}
 
-		public static void UpdateTextColor(this TextView textView, ITextStyle textStyle) =>
-			textView.UpdateTextColor(textStyle, textView.TextColors);
-
-		public static void UpdateTextColor(this TextView textView, ITextStyle textStyle, ColorStateList? defaultColor)
+		public static void UpdateTextColor(this TextView textView, ITextStyle textStyle)
 		{
-			var textColor = textStyle.TextColor;
-
-			if (textColor != null)
+			Java.Lang.Integer? color = null;
+			if (textStyle.TextColor != null)
 			{
-				textView.SetTextColor(textColor.ToNative());
-				return;
+				color = new(textStyle.TextColor.ToNative());
 			}
-
-			if (defaultColor != null)
-				textView.SetTextColor(defaultColor);
+			ViewHelper.SetTextColorOrDefault(textView, color);
 		}
 
 		public static void UpdateFont(this TextView textView, ITextStyle textStyle, IFontManager fontManager)

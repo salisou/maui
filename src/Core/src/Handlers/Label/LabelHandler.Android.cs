@@ -7,10 +7,6 @@ namespace Microsoft.Maui.Handlers
 {
 	public partial class LabelHandler : ViewHandler<ILabel, AppCompatTextView>
 	{
-		static Color? DefaultTextColor { get; set; }
-		static float? LineSpacingAddDefault { get; set; }
-		static float? LineSpacingMultDefault { get; set; }
-
 		protected override AppCompatTextView CreateNativeView() => new AppCompatTextView(Context);
 
 		public override void NativeArrange(Rectangle frame)
@@ -37,27 +33,6 @@ namespace Microsoft.Maui.Handlers
 			base.NativeArrange(frame);
 		}
 
-		protected override void ConnectHandler(AppCompatTextView nativeView)
-		{
-			base.ConnectHandler(nativeView);
-			SetupDefaults(nativeView);
-		}
-
-		void SetupDefaults(AppCompatTextView nativeView)
-		{
-			if (nativeView.TextColors == null)
-			{
-				DefaultTextColor = null;
-			}
-			else
-			{
-				DefaultTextColor = Color.FromUint((uint)nativeView.TextColors.DefaultColor);
-			}
-
-			LineSpacingAddDefault = nativeView.LineSpacingExtra;
-			LineSpacingMultDefault = nativeView.LineSpacingMultiplier;
-		}
-
 		public static void MapText(LabelHandler handler, ILabel label)
 		{
 			handler.NativeView?.UpdateTextPlainText(label);
@@ -65,7 +40,7 @@ namespace Microsoft.Maui.Handlers
 
 		public static void MapTextColor(LabelHandler handler, ILabel label)
 		{
-			handler.NativeView?.UpdateTextColor(label, DefaultTextColor!);
+			handler.NativeView?.UpdateTextColor(label);
 		}
 
 		public static void MapCharacterSpacing(LabelHandler handler, ILabel label)

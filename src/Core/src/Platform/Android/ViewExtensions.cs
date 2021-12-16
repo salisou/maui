@@ -18,7 +18,7 @@ namespace Microsoft.Maui.Platform
 	{
 		public static int AutomationTagId { get; set; } = Resource.Id.automation_tag_id;
 
-		public static void Initialize(this AView nativeView, IView view)
+		public static void Initialize(this AView nativeView, IView view, IElementHandler handler)
 		{
 			var context = nativeView.Context;
 			if (context == null)
@@ -39,6 +39,15 @@ namespace Microsoft.Maui.Platform
 
 			if (view is ILabel label && nativeView is TextView textView)
 			{
+				var font = label.Font;
+				var fontManager = handler.GetRequiredService<IFontManager>();
+				var fontSize = fontManager.GetFontSize(font);
+				Java.Lang.Integer? textColor = null;
+				if (label.TextColor != null)
+				{
+					textColor = new(label.TextColor.ToNative());
+				}
+
 				using Java.Lang.String? text = textView.Text == null ? null : new(textView.Text);
 				var textDecorations = label.TextDecorations;
 				ViewHelper.SetTextView(
@@ -62,20 +71,20 @@ namespace Microsoft.Maui.Platform
 					pivotY: pivotY,
 					//TODO: do all these
 					letterSpacing: default,
-					typeface: default,
-					textSizeUnit: default,
-					textSize: default,
-					textAlignment: default,
+					typeface: fontManager.GetTypeface(font),
+					textSizeUnit: (int)fontSize.Unit,
+					textSize: fontSize.Value,
+					textAlignment: (int)label.HorizontalTextAlignment.ToTextAlignment(),
 					gravity: default,
 					singleLine: default,
 					maxLines: default,
 					lineSpacing: default,
-					paddingLeft: default,
-					paddingTop: default,
-					paddingRight: default,
-					paddingBottom: default,
+					paddingLeft: (int)context.ToPixels(label.Padding.Left),
+					paddingTop: (int)context.ToPixels(label.Padding.Top),
+					paddingRight: (int)context.ToPixels(label.Padding.Right),
+					paddingBottom: (int)context.ToPixels(label.Padding.Bottom),
 					text: text,
-					textColor: default,
+					textColor: textColor,
 					strikeThrough: (textDecorations & TextDecorations.Strikethrough) != 0,
 					underline: (textDecorations & TextDecorations.Underline) != 0
 				);

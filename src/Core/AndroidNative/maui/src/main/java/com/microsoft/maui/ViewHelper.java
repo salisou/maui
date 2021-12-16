@@ -87,6 +87,15 @@ public class ViewHelper {
         textView.setPaintFlags(paintFlags);
     }
 
+    public static void setTextColorOrDefault(TextView textView, Integer textColor)
+    {
+        if (textColor != null) {
+            textView.setTextColor(textColor);
+        } else {
+            textView.setTextColor(textView.getTextColors().getDefaultColor());
+        }
+    }
+
     public static void setTextView(
         TextView textView,
         int automationTagId,
@@ -120,7 +129,7 @@ public class ViewHelper {
         int paddingRight,
         int paddingBottom,
         CharSequence text,
-        int textColor,
+        Integer textColor,
         boolean strikeThrough,
         boolean underline)
     {
@@ -136,7 +145,7 @@ public class ViewHelper {
         textView.setLineSpacing(0, lineSpacing);
         textView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         textView.setText(text);
-        textView.setTextColor(textColor);
+        setTextColorOrDefault(textView, textColor);
         setPaintFlags(textView, strikeThrough, underline);
     }
 }

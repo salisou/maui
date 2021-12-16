@@ -135,7 +135,7 @@ namespace Microsoft.Maui.Handlers
 
 			if (element is IView view)
 			{
-				((NativeView?)NativeView)?.Initialize(view);
+				((NativeView?)NativeView)?.Initialize(view, this);
 			}
 		}
 #endif
