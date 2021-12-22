@@ -153,7 +153,7 @@ namespace Microsoft.Maui
 			set => Add(key, value);
 		}
 
-		public void Add(string key, Action<TViewHandler, TVirtualView> action) =>
+		public virtual void Add(string key, Action<TViewHandler, TVirtualView> action) =>
 			SetPropertyCore(key, (h, v) =>
 			{
 				if (v is TVirtualView vv)

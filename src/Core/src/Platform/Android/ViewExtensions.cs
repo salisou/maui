@@ -18,7 +18,7 @@ namespace Microsoft.Maui.Platform
 	{
 		public static int AutomationTagId { get; set; } = Resource.Id.automation_tag_id;
 
-		public static void Initialize(this AView nativeView, IView view)
+		internal static void Initialize(this AView nativeView, PropertyBitMask propertyMask, IView view)
 		{
 			var context = nativeView.Context;
 			if (context == null)
@@ -39,6 +39,7 @@ namespace Microsoft.Maui.Platform
 
 			// NOTE: use named arguments for clarity
 			ViewHelper.Set(nativeView,
+				propertyMask: (int)propertyMask,
 				automationTagId: AutomationTagId,
 				automationId: view.AutomationId,
 				visibility: visibility,

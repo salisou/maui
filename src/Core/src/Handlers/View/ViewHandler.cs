@@ -50,7 +50,11 @@ namespace Microsoft.Maui.Handlers
 #if ANDROID || WINDOWS
 			[nameof(IToolbarElement.Toolbar)] = MapToolbar,
 #endif
-		};
+		}
+#if ANDROID
+		.Initialized()
+#endif
+		;
 
 		public static CommandMapper<IView, ViewHandler> ViewCommandMapper = new()
 		{
@@ -133,10 +137,13 @@ namespace Microsoft.Maui.Handlers
 		{
 			base.SetVirtualView(element);
 
-			if (element is IView view)
-			{
-				((NativeView?)NativeView)?.Initialize(view);
-			}
+			if (element is not IView view)
+				return;
+			if (NativeView is not NativeView nativeView)
+				return;
+			if (ViewMapper is not AndroidBatchPropertyMapper<IView, IViewHandler> mapper)
+				return;
+			nativeView.Initialize(mapper.PropertyMask, view);
 		}
 #endif
 
