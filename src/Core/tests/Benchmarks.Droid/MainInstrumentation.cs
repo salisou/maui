@@ -49,7 +49,8 @@ public class MainInstrumentation : Instrumentation
             config.UnionRule = ConfigUnionRule.AlwaysUseGlobal; // Overriding the default
             config.AddLogger(logger);
 
-            BenchmarkRunner.Run<ViewHandlerBenchmark>(config.WithOptions(ConfigOptions.DisableLogFile));
+			// ImageBenchmark class is hardcoded here for now
+            BenchmarkRunner.Run<ImageBenchmark>(config.WithOptions(ConfigOptions.DisableLogFile));
             success = true;
         } catch (Exception ex) {
             Log.Error (Tag, $"Error: {ex}");
