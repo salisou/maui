@@ -3,7 +3,7 @@ using System;
 #if __IOS__ || MACCATALYST
 using PlatformView = UIKit.UIImage;
 #elif MONOANDROID
-using PlatformView = Android.Graphics.Drawables.Drawable;
+using PlatformView = Microsoft.Maui.ResourceOrDrawable;
 #elif WINDOWS
 using PlatformView = Microsoft.UI.Xaml.Media.ImageSource;
 #elif NETSTANDARD || (NET6_0 && !IOS && !ANDROID)

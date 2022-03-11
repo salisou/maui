@@ -13,10 +13,10 @@ namespace Microsoft.Maui
 {
 	public partial class UriImageSourceService
 	{
-		public override Task<IImageSourceServiceResult<Drawable>?> GetDrawableAsync(IImageSource imageSource, Context context, CancellationToken cancellationToken = default) =>
+		public override Task<IImageSourceServiceResult<ResourceOrDrawable>?> GetDrawableAsync(IImageSource imageSource, Context context, CancellationToken cancellationToken = default) =>
 			GetDrawableAsync((IUriImageSource)imageSource, context, cancellationToken);
 
-		public async Task<IImageSourceServiceResult<Drawable>?> GetDrawableAsync(IUriImageSource imageSource, Context context, CancellationToken cancellationToken = default)
+		public async Task<IImageSourceServiceResult<ResourceOrDrawable>?> GetDrawableAsync(IUriImageSource imageSource, Context context, CancellationToken cancellationToken = default)
 		{
 			if (imageSource.IsEmpty)
 				return null;

@@ -7,7 +7,7 @@ namespace Microsoft.Maui
 	public interface IImageSourceService
 	{
 #if ANDROID
-		Task<IImageSourceServiceResult<Android.Graphics.Drawables.Drawable>?> GetDrawableAsync(
+		Task<IImageSourceServiceResult<ResourceOrDrawable>?> GetDrawableAsync(
 			IImageSource imageSource,
 			Android.Content.Context context,
 			CancellationToken cancellationToken = default);

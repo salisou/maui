@@ -15,7 +15,7 @@ namespace Microsoft.Maui
 		public ILogger? Logger { get; }
 
 #if __ANDROID__
-		public abstract Task<IImageSourceServiceResult<Android.Graphics.Drawables.Drawable>?> GetDrawableAsync(
+		public abstract Task<IImageSourceServiceResult<ResourceOrDrawable>?> GetDrawableAsync(
 			IImageSource imageSource,
 			Android.Content.Context context,
 			CancellationToken cancellationToken = default);

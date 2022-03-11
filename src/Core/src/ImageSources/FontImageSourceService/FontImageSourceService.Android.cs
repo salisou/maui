@@ -14,10 +14,10 @@ namespace Microsoft.Maui
 {
 	public partial class FontImageSourceService
 	{
-		public override Task<IImageSourceServiceResult<Drawable>?> GetDrawableAsync(IImageSource imageSource, Context context, CancellationToken cancellationToken = default) =>
+		public override Task<IImageSourceServiceResult<ResourceOrDrawable>?> GetDrawableAsync(IImageSource imageSource, Context context, CancellationToken cancellationToken = default) =>
 			GetDrawableAsync((IFontImageSource)imageSource, context, cancellationToken);
 
-		public async Task<IImageSourceServiceResult<Drawable>?> GetDrawableAsync(IFontImageSource imageSource, Context context, CancellationToken cancellationToken = default)
+		public async Task<IImageSourceServiceResult<ResourceOrDrawable>?> GetDrawableAsync(IFontImageSource imageSource, Context context, CancellationToken cancellationToken = default)
 		{
 			if (imageSource.IsEmpty)
 				return null;
