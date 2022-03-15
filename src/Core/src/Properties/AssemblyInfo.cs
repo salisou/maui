@@ -29,3 +29,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("CommunityToolkit.Maui.Markup")]
 [assembly: InternalsVisibleTo("CommunityToolkit.Maui.Markup.UnitTests")]
 [assembly: InternalsVisibleTo("Reloadify-emit")]
+[assembly: InternalsVisibleTo("Benchmarks.Droid")]

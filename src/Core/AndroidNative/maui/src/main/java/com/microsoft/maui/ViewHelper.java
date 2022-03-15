@@ -1,9 +1,21 @@
 package com.microsoft.maui;
 
+import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.SearchView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ViewHelper {
     public static void requestLayoutIfNeeded(View view)
@@ -94,4 +106,59 @@ public class ViewHelper {
         setPivotXIfNeeded(view, pivotX);
         setPivotYIfNeeded(view, pivotY);
     }
+
+    @NonNull
+    public static List<View> createBottomTabLayout(Context context, int navigationStyle)
+    {
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        FrameLayout bottom = new FrameLayout(context);
+        bottom.setId(View.generateViewId());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        layoutParams.gravity = Gravity.FILL;
+        layoutParams.weight = 1;
+        bottom.setLayoutParams(layoutParams);
+
+        BottomNavigationView navigation = new BottomNavigationView(new ContextThemeWrapper(context, navigationStyle));
+        navigation.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        bottom.addView(navigation);
+        layout.addView(bottom);
+
+        return Arrays.asList(layout, bottom, navigation);
+    }
+
+    @NonNull
+    public static LinearLayout createLinearLayout(Context context)
+    {
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return layout;
+    }
+
+    @NonNull
+    public static FrameLayout createFrameLayout(Context context, LinearLayout layout)
+    {
+        FrameLayout bottom = new FrameLayout(context);
+        bottom.setId(View.generateViewId());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        layoutParams.gravity = Gravity.FILL;
+        layoutParams.weight = 1;
+        bottom.setLayoutParams(layoutParams);
+        layout.addView(bottom);
+        return bottom;
+    }
+
+    @NonNull
+    public static BottomNavigationView createNavigationBar(Context context, int navigationStyle, FrameLayout bottom)
+    {
+        BottomNavigationView navigation = new BottomNavigationView(new ContextThemeWrapper(context, navigationStyle));
+        navigation.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        bottom.addView(navigation);
+        return navigation;
+    }
 }
+

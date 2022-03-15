@@ -1,3 +1,4 @@
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
 
 namespace Benchmarks.Droid;
@@ -45,11 +46,15 @@ public class MainInstrumentation : Instrumentation
                 config.AddValidator (v);
             foreach (var p in baseConfig.GetColumnProviders())
                 config.AddColumnProvider(p);
-            config.AddJob(JobMode<Job>.Default.WithToolchain(new InProcessEmitToolchain(TimeSpan.FromMinutes(10), logOutput: true)));
+            var job = JobMode<Job>.Default
+                .WithToolchain(new InProcessEmitToolchain(TimeSpan.FromMinutes(10), logOutput: true))
+                .WithIterationCount(1)
+                .WithStrategy(RunStrategy.ColdStart);
+            config.AddJob(job);
             config.UnionRule = ConfigUnionRule.AlwaysUseGlobal; // Overriding the default
             config.AddLogger(logger);
 
-            BenchmarkRunner.Run<ViewHandlerBenchmark>(config.WithOptions(ConfigOptions.DisableLogFile));
+            BenchmarkRunner.Run<InflateBenchmark>(config.WithOptions(ConfigOptions.DisableLogFile));
             success = true;
         } catch (Exception ex) {
             Log.Error (Tag, $"Error: {ex}");
