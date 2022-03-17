@@ -11,7 +11,6 @@ using Google.Android.Material.BottomNavigation;
 using Google.Android.Material.BottomSheet;
 using Google.Android.Material.Navigation;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Maui.Controls.Platform.Compatibility;
 using Microsoft.Maui.Graphics;
 using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
@@ -49,7 +48,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		protected const int MoreTabId = 99;
 		BottomNavigationView _bottomView;
 		FrameLayout _navigationArea;
-		AView _outerLayout;
+		LinearLayout _outerLayout;
 		IShellBottomNavViewAppearanceTracker _appearanceTracker;
 		BottomNavigationViewTracker _bottomNavigationTracker;
 		BottomSheetDialog _bottomSheetDialog;
@@ -68,11 +67,30 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		{
 			base.OnCreateView(inflater, container, savedInstanceState);
 
-			_outerLayout = inflater.Inflate(Controls.Resource.Layout.bottomtablayout, null);
-			_bottomView = _outerLayout.FindViewById<BottomNavigationView>(Controls.Resource.Id.bottomtab_tabbar);
-			_navigationArea = _outerLayout.FindViewById<FrameLayout>(Controls.Resource.Id.bottomtab_navarea);
+			var context = MauiContext.Context;
+			_outerLayout = new LinearLayout(context)
+			{
+				Orientation = Orientation.Vertical,
+				LayoutParameters = new LP(LP.MatchParent, LP.MatchParent)
+			};
+			_navigationArea = new FrameLayout(context)
+			{
+				Id = AView.GenerateViewId(),
+				LayoutParameters = new LinearLayout.LayoutParams(LP.MatchParent, 0)
+				{
+					Gravity = GravityFlags.Fill,
+					Weight = 1,
+				},
+			};
+			_bottomView = new BottomNavigationView(new ContextThemeWrapper(context, Resource.Style.Widget_Design_BottomNavigationView))
+			{
+				LayoutParameters = new LP(LP.MatchParent, LP.WrapContent),
+			};
 
-			_bottomView.SetBackgroundColor(Colors.White.ToPlatform());
+			_navigationArea.AddView(_bottomView);
+			_outerLayout.AddView(_navigationArea);
+
+			_bottomView.SetBackgroundColor(AColor.White);
 			_bottomView.SetOnItemSelectedListener(this);
 
 			if (ShellItem == null)
