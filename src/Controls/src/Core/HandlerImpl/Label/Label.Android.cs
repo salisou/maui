@@ -62,6 +62,10 @@ namespace Microsoft.Maui.Controls
 				if (platformView == null || virtualView == null)
 					return;
 
+				// We can return if there is no FormattedText
+				if (virtualView.FormattedText == null)
+					return;
+
 				SpannableString spannableString = null;
 
 				if (virtualView.FormattedText != null)
