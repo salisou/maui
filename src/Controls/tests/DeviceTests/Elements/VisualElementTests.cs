@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Handlers;
@@ -59,15 +60,48 @@ namespace Microsoft.Maui.DeviceTests
 				editor.Loaded += (_, __) => loaded++;
 				editor.Unloaded += (_, __) => unloaded++;
 
-				await CreateHandlerAndAddToWindow<EditorHandler>(editor, (handler) =>
+				await CreateHandlerAndAddToWindow<EditorHandler>(editor, async (handler) =>
 				{
 					Assert.Equal(1, loaded);
 					Assert.Equal(0, unloaded);
-					return Task.CompletedTask;
+
+					await Task.Yield();
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
 				});
 
 				Assert.Equal(1, loaded);
 				Assert.Equal(1, unloaded);
+			}
+
+			[Fact("View.Loaded Does Not Leak")]
+			public async Task LoadedDoesNotLeak()
+			{
+				WeakReference reference;
+
+				{
+					var editor = new Editor();
+					var layout = new VerticalStackLayout()
+					{
+						editor
+					};
+					reference = new WeakReference(editor);
+
+					editor.Loaded += (_, __) => { };
+					editor.Unloaded += (_, __) => { };
+					await CreateHandlerAndAddToWindow<LayoutHandler>(layout, _ =>
+					{
+						layout.Remove(editor);
+						editor.Handler?.DisconnectHandler();
+						return Task.CompletedTask;
+					});
+				}
+
+				await Task.Yield();
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+
+				Assert.False(reference.IsAlive, "Editor should not be alive!");
 			}
 
 			[Fact]

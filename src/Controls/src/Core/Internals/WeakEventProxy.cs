@@ -152,4 +152,44 @@ namespace Microsoft.Maui.Controls
 			base.Unsubscribe();
 		}
 	}
+
+	/// <summary>
+	/// A "proxy" class for subscribing INotifyPropertyChanged via WeakReference.
+	/// General usage is to store this in a member variable and call Subscribe()/Unsubscribe() appropriately.
+	/// Your class should have a finalizer that calls Unsubscribe() to prevent WeakNotifyPropertyChangedProxy objects from leaking.
+	/// </summary>
+	class WeakHandlerChangedProxy : WeakEventProxy<Element, EventHandler>
+	{
+		void OnHandlerChanged(object? sender, EventArgs e)
+		{
+			if (TryGetHandler(out var handler))
+			{
+				handler(sender, e);
+			}
+			else
+			{
+				Unsubscribe();
+			}
+		}
+
+		public override void Subscribe(Element source, EventHandler handler)
+		{
+			if (TryGetSource(out var s))
+			{
+				s.HandlerChanged -= OnHandlerChanged;
+			}
+
+			source.HandlerChanged += OnHandlerChanged;
+			base.Subscribe(source, handler);
+		}
+
+		public override void Unsubscribe()
+		{
+			if (TryGetSource(out var s))
+			{
+				s.HandlerChanged -= OnHandlerChanged;
+			}
+			base.Unsubscribe();
+		}
+	}
 }

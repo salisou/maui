@@ -435,18 +435,14 @@ namespace Microsoft.Maui.Controls
 			if (bindable is not VisualElement visualElement)
 				return;
 
-			if (visualElement._watchingPlatformLoaded && oldValue is Window oldWindow)
-				oldWindow.HandlerChanged -= visualElement.OnWindowHandlerChanged;
-
+			visualElement._windowHandlerChangedProxy?.Unsubscribe();
 			visualElement.UpdatePlatformUnloadedLoadedWiring(newValue as Window);
 			visualElement.InvalidateStateTriggers(newValue != null);
 			visualElement._windowChanged?.Invoke(visualElement, EventArgs.Empty);
 		}
 
-		void OnWindowHandlerChanged(object? sender, EventArgs e)
-		{
-			UpdatePlatformUnloadedLoadedWiring(Window);
-		}
+		WeakHandlerChangedProxy _windowHandlerChangedProxy;
+		EventHandler _onWindowHandlerChanged;
 
 		// We only want to wire up to platform loaded events
 		// if the user is watching for them. Otherwise
@@ -462,8 +458,7 @@ namespace Microsoft.Maui.Controls
 
 			if (_unloaded == null && _loaded == null)
 			{
-				if (window is not null)
-					window.HandlerChanged -= OnWindowHandlerChanged;
+				_windowHandlerChangedProxy?.Unsubscribe();
 
 #if PLATFORM
 				_loadedUnloadedToken?.Dispose();
@@ -477,7 +472,11 @@ namespace Microsoft.Maui.Controls
 			if (!_watchingPlatformLoaded)
 			{
 				if (window is not null)
-					window.HandlerChanged += OnWindowHandlerChanged;
+				{
+					_windowHandlerChangedProxy ??= new WeakHandlerChangedProxy();
+					_onWindowHandlerChanged ??= (sender, e) => UpdatePlatformUnloadedLoadedWiring(Window);
+					_windowHandlerChangedProxy.Subscribe(window, _onWindowHandlerChanged);
+				}
 
 				_watchingPlatformLoaded = true;
 			}

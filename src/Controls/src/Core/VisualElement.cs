@@ -286,6 +286,7 @@ namespace Microsoft.Maui.Controls
 			_clipProxy?.Unsubscribe();
 			_backgroundProxy?.Unsubscribe();
 			_shadowProxy?.Unsubscribe();
+			_windowHandlerChangedProxy?.Unsubscribe();
 		}
 
 		void NotifyBackgroundChanges()
