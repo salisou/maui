@@ -298,7 +298,7 @@ namespace Microsoft.Maui.DeviceTests
 
 			await CreateHandlerAndAddToWindow<WindowHandlerStub>(new Window(navPage), async (handler) =>
 			{
-				var page = new ContentPage { Title = "Page 2" };
+				var page = new ContentPage { Title = "Page 2", Content = new VerticalStackLayout { new Label() } };
 				pageReference = new WeakReference(page);
 				await navPage.Navigation.PushAsync(page);
 				await navPage.Navigation.PopAsync();
