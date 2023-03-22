@@ -304,9 +304,13 @@ namespace Microsoft.Maui.DeviceTests
 				await navPage.Navigation.PopAsync();
 			});
 
-			await Task.Yield();
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
+			// 2 GCs required on Android
+			for (int i = 0; i < 2; i++)
+			{
+				await Task.Yield();
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+			}
 
 			Assert.NotNull(pageReference);
 			Assert.False(pageReference.IsAlive, "Page should not be alive!");
