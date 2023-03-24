@@ -9,7 +9,7 @@ using Microsoft.Maui.Graphics.Platform;
 namespace Microsoft.Maui.Platform
 {
 	// TODO ezhart At this point, this is almost exactly a clone of LayoutViewGroup; we may be able to drop this class entirely
-	public class ContentViewGroup : ViewGroup
+	public class ContentViewGroup : PlatformContentViewGroup
 	{
 		IBorderStroke? _clip;
 		readonly Context _context;
@@ -39,14 +39,6 @@ namespace Microsoft.Maui.Platform
 		public ContentViewGroup(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes)
 		{
 			_context = context;
-		}
-
-		protected override void DispatchDraw(Canvas? canvas)
-		{
-			if (Clip != null)
-				ClipChild(canvas);
-
-			base.DispatchDraw(canvas);
 		}
 
 		protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
@@ -98,17 +90,18 @@ namespace Microsoft.Maui.Platform
 			set
 			{
 				_clip = value;
-				PostInvalidate();
+				// NOTE: calls PostInvalidate()
+				SetHasClip(_clip is not null);
 			}
 		}
 
 		internal Func<double, double, Graphics.Size>? CrossPlatformMeasure { get; set; }
 		internal Func<Graphics.Rect, Graphics.Size>? CrossPlatformArrange { get; set; }
 
-		void ClipChild(Canvas? canvas)
+		protected override Path? GetClipPath(Canvas canvas)
 		{
 			if (Clip == null || canvas == null)
-				return;
+				return null;
 
 			float density = _context.GetDisplayDensity();
 
@@ -120,9 +113,7 @@ namespace Microsoft.Maui.Platform
 			var bounds = new Graphics.RectF(offset, offset, w, h);
 			var path = Clip.Shape?.PathForBounds(bounds);
 			var currentPath = path?.AsAndroidPath(scaleX: density, scaleY: density);
-
-			if (currentPath != null)
-				canvas.ClipPath(currentPath);
+			return currentPath;
 		}
 	}
 }

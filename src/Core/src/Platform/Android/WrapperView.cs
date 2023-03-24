@@ -10,11 +10,9 @@ using AView = Android.Views.View;
 
 namespace Microsoft.Maui.Platform
 {
-	public partial class WrapperView : ViewGroup
+	public partial class WrapperView : PlatformWrapperView
 	{
 		const int MaximumRadius = 100;
-
-		readonly Android.Graphics.Rect _viewBounds;
 
 		APath _currentPath;
 		SizeF _lastPathSize;
@@ -32,8 +30,6 @@ namespace Microsoft.Maui.Platform
 		public WrapperView(Context context)
 			: base(context)
 		{
-			_viewBounds = new Android.Graphics.Rect();
-
 			SetClipChildren(false);
 			SetWillNotDraw(true);
 		}
@@ -66,51 +62,12 @@ namespace Microsoft.Maui.Platform
 			_borderView?.Layout(0, 0, child.MeasuredWidth, child.MeasuredHeight);
 		}
 
-		protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
-		{
-			if (ChildCount == 0 || GetChildAt(0) is not View child)
-			{
-				base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-				return;
-			}
-
-			_viewBounds.Set(
-				0, 0, MeasureSpec.GetSize(widthMeasureSpec), MeasureSpec.GetSize(heightMeasureSpec));
-
-			child.Measure(widthMeasureSpec, heightMeasureSpec);
-
-			SetMeasuredDimension(child.MeasuredWidth, child.MeasuredHeight);
-		}
-
 		public override void RequestLayout()
 		{
 			// Redraw shadow (if exists)
 			_invalidateShadow = true;
 
 			base.RequestLayout();
-		}
-
-		protected override void DispatchDraw(Canvas canvas)
-		{
-			// If is not shadowed, skip
-			if (Shadow?.Paint != null)
-			{
-				DrawShadow(canvas);
-			}
-			else
-			{
-				if (_shadowBitmap != null)
-				{
-					ClearShadowResources();
-				}
-			}
-
-			// Clip the child view
-			if (Clip != null)
-				ClipChild(canvas);
-
-			// Draw child`s
-			base.DispatchDraw(canvas);
 		}
 
 		public override bool DispatchTouchEvent(MotionEvent e)
@@ -126,13 +83,19 @@ namespace Microsoft.Maui.Platform
 		partial void ClipChanged()
 		{
 			_invalidateClip = _invalidateShadow = true;
-			PostInvalidate();
+			SetHasClip(Clip is not null);
 		}
 
 		partial void ShadowChanged()
 		{
 			_invalidateShadow = true;
-			PostInvalidate();
+
+			bool hasShadow = Shadow?.Paint is not null;
+			SetHasShadow(hasShadow);
+			if (!hasShadow && _shadowBitmap is not null)
+			{
+				ClearShadowResources();
+			}
 		}
 
 		partial void BorderChanged()
@@ -153,7 +116,7 @@ namespace Microsoft.Maui.Platform
 			_borderView.UpdateBorderStroke(Border);
 		}
 
-		void ClipChild(Canvas canvas)
+		protected override APath GetClipPath(Canvas canvas)
 		{
 			var density = Context.GetDisplayDensity();
 			var newSize = new SizeF(canvas.Width, canvas.Height);
@@ -168,11 +131,10 @@ namespace Microsoft.Maui.Platform
 				_lastPathSize = newSize;
 			}
 
-			if (_currentPath != null)
-				canvas.ClipPath(_currentPath);
+			return _currentPath;
 		}
 
-		void DrawShadow(Canvas canvas)
+		protected override void DrawShadow(Canvas canvas, int viewWidth, int viewHeight)
 		{
 			if (_shadowCanvas == null)
 				_shadowCanvas = new Canvas();
@@ -190,18 +152,6 @@ namespace Microsoft.Maui.Platform
 			// If need to redraw shadow
 			if (_invalidateShadow)
 			{
-				var viewHeight = _viewBounds.Height();
-				var viewWidth = _viewBounds.Width();
-
-				if (GetChildAt(0) is AView child)
-				{
-					if (viewHeight == 0)
-						viewHeight = child.MeasuredHeight;
-
-					if (viewWidth == 0)
-						viewWidth = child.MeasuredWidth;
-				}
-
 				// If bounds is zero
 				if (viewHeight != 0 && viewWidth != 0)
 				{
@@ -213,20 +163,11 @@ namespace Microsoft.Maui.Platform
 						bitmapWidth, bitmapHeight, Bitmap.Config.Argb8888
 					);
 
-					// Reset Canvas
-					_shadowCanvas.SetBitmap(_shadowBitmap);
-
 					_invalidateShadow = false;
 
-					// Create the local copy of all content to draw bitmap as a
-					// bottom layer of natural canvas.
-					base.DispatchDraw(_shadowCanvas);
-
-					// Get the alpha bounds of bitmap
-					Bitmap extractAlpha = _shadowBitmap.ExtractAlpha();
-
-					// Clear past content content to draw shadow
-					_shadowCanvas.DrawColor(Android.Graphics.Color.Black, PorterDuff.Mode.Clear);
+					// Create the local copy of all content to draw bitmap as a bottom layer of natural canvas.
+					// Returns the alpha bounds of bitmap.
+					Bitmap extractAlpha = DrawShadowCore(_shadowCanvas, _shadowBitmap);
 
 					var shadowOpacity = (float)Shadow.Opacity;
 
