@@ -343,11 +343,43 @@ namespace Microsoft.Maui.Controls.Core.UnitTests
 			Assert.Equal(2, tableSectionElement.Count);
 		}
 
-		Layout CreateLayout(Type TLayout)
+		[Theory]
+		[InlineData(typeof(CollectionView))]
+		[InlineData(typeof(ListView))]
+		public void ItemsSourceFiresVisualTreeChanged(Type TLayout)
 		{
-			var layout = (Layout)Activator.CreateInstance(TLayout)!;
-			layout.IsPlatformEnabled = true;
+			if (!DebuggerHelper.DebuggerIsAttached)
+				return;
 
+			CreateNewApp(out _, out _, out var page);
+
+			var layout = (ItemsView)CreateView(TLayout);
+			page.Content = layout;
+
+			layout.ItemsSource = new[] { "a", "b", "c" };
+			_treeEvents.Clear();
+
+			layout.ItemsSource = new string[0];
+			Assert.Equal(3, _treeEvents.Count);
+
+			for (var i = _treeEvents.Count - 1; i >= 0; i--)
+			{
+				var (parent, args) = _treeEvents[_treeEvents.Count - 1 - i];
+
+				Assert.Equal(layout, parent);
+				Assert.Equal(layout, args.Parent);
+				Assert.NotNull(args.Child);
+				Assert.Equal(i, args.ChildIndex);
+				Assert.Equal(VisualTreeChangeType.Remove, args.ChangeType);
+			}
+		}
+
+		Layout CreateLayout(Type TLayout) => (Layout)CreateView(TLayout);
+
+		View CreateView(Type TLayout)
+		{
+			var layout = (View)Activator.CreateInstance(TLayout)!;
+			layout.IsPlatformEnabled = true;
 			return layout;
 		}
 
