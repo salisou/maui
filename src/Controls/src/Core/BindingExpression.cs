@@ -17,7 +17,6 @@ namespace Microsoft.Maui.Controls
 		internal const string PropertyNotFoundErrorMessage = "'{0}' property not found on '{1}', target property: '{2}.{3}'";
 		internal const string CannotConvertTypeErrorMessage = "'{0}' cannot be converted to type '{1}'";
 		internal const string ParseIndexErrorMessage = "'{0}' could not be parsed as an index for a '{1}'";
-		static readonly char[] ExpressionSplit = new[] { '.' };
 
 		readonly List<BindingExpressionPart> _parts = new List<BindingExpressionPart>();
 
@@ -205,45 +204,54 @@ namespace Microsoft.Maui.Controls
 				p = p.Substring(1);
 			}
 
-			string[] pathParts = p.Split(ExpressionSplit);
-			for (var i = 0; i < pathParts.Length; i++)
+			int start = 0;
+			for (int i = 0; i < p.Length; i++)
 			{
-				string part = pathParts[i].Trim();
-				if (part == string.Empty)
-					throw new FormatException("Path contains an empty part");
-
-				BindingExpressionPart indexer = null;
-
-				int lbIndex = part.IndexOf("[", StringComparison.Ordinal);
-				if (lbIndex != -1)
+				if (p[i] == '.')
 				{
-					int rbIndex = part.LastIndexOf(']');
-					if (rbIndex == -1)
-						throw new FormatException("Indexer did not contain closing bracket");
-
-					int argLength = rbIndex - lbIndex - 1;
-					if (argLength == 0)
-						throw new FormatException("Indexer did not contain arguments");
-
-					string argString = part.Substring(lbIndex + 1, argLength);
-					indexer = new BindingExpressionPart(this, argString, true);
-
-					part = part.Substring(0, lbIndex);
-					part = part.Trim();
+					var part = p.AsSpan(start, i - start).Trim();
+					ParsePart(part, ref last);
+					start = i + 1;
 				}
-				if (part.Length > 0)
-				{
-					var next = new BindingExpressionPart(this, part);
-					last.NextPart = next;
-					_parts.Add(next);
-					last = next;
-				}
-				if (indexer != null)
-				{
-					last.NextPart = indexer;
-					_parts.Add(indexer);
-					last = indexer;
-				}
+			}
+			ParsePart(p.AsSpan(start), ref last);
+		}
+
+		void ParsePart(ReadOnlySpan<char> part, ref BindingExpressionPart last)
+		{
+			if (part.Length == 0)
+				throw new FormatException("Path contains an empty part");
+
+			BindingExpressionPart indexer = null;
+
+			int lbIndex = part.IndexOf('[');
+			if (lbIndex != -1)
+			{
+				int rbIndex = part.LastIndexOf(']');
+				if (rbIndex == -1)
+					throw new FormatException("Indexer did not contain closing bracket");
+
+				int argLength = rbIndex - lbIndex - 1;
+				if (argLength == 0)
+					throw new FormatException("Indexer did not contain arguments");
+
+				var argString = part.Slice(lbIndex + 1, argLength);
+				indexer = new BindingExpressionPart(this, argString.ToString(), true);
+
+				part = part.Slice(0, lbIndex).Trim();
+			}
+			if (part.Length > 0)
+			{
+				var next = new BindingExpressionPart(this, part.ToString());
+				last.NextPart = next;
+				_parts.Add(next);
+				last = next;
+			}
+			if (indexer != null)
+			{
+				last.NextPart = indexer;
+				_parts.Add(indexer);
+				last = indexer;
 			}
 		}
 
