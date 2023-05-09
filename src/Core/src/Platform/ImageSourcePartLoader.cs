@@ -24,26 +24,41 @@ namespace Microsoft.Maui.Platform
 	public partial class ImageSourcePartLoader
 	{
 		IImageSourceServiceProvider? _imageSourceServiceProvider;
-		IImageSourceServiceProvider ImageSourceServiceProvider =>
-			_imageSourceServiceProvider ??= Handler.GetRequiredService<IImageSourceServiceProvider>();
+		IImageSourceServiceProvider? ImageSourceServiceProvider
+		{
+			get
+			{
+				if (_imageSourceServiceProvider is not null)
+					return _imageSourceServiceProvider;
+
+				if (Handler is IElementHandler handler)
+				{
+					_imageSourceServiceProvider = handler.GetRequiredService<IImageSourceServiceProvider>();
+				}
+
+				return _imageSourceServiceProvider;
+			}
+		}
 
 		readonly Func<IImageSourcePart?> _imageSourcePart;
 		Action<PlatformImage?>? SetImage { get; }
-		PlatformView? PlatformView => Handler.PlatformView as PlatformView;
+		PlatformView? PlatformView => Handler?.PlatformView as PlatformView;
 
 		internal ImageSourceServiceResultManager SourceManager { get; } = new ImageSourceServiceResultManager();
 
-		IElementHandler Handler { get; }
+		WeakReference<IElementHandler> _handler;
+
+		IElementHandler? Handler => _handler.TryGetTarget(out var handler) ? handler : null;
 
 		public ImageSourcePartLoader(
 			IElementHandler handler,
 			Func<IImageSourcePart?> imageSourcePart,
 			Action<PlatformImage?> setImage)
 		{
-			Handler = handler;
+			_handler = new WeakReference<IElementHandler>(handler);
 			_imageSourcePart = imageSourcePart;
 
-			SetImage = setImage;
+			//SetImage = setImage;
 		}
 
 		public void Reset()
@@ -64,10 +79,13 @@ namespace Microsoft.Maui.Platform
 			if (imageSource?.Source is not null)
 			{
 #if __IOS__ || __ANDROID__ || WINDOWS || TIZEN
-				var result = await imageSource.UpdateSourceAsync(PlatformView, ImageSourceServiceProvider, SetImage!, token)
-					.ConfigureAwait(false);
+				if (ImageSourceServiceProvider is IImageSourceServiceProvider provider)
+				{
+					var result = await imageSource.UpdateSourceAsync(PlatformView, provider, SetImage!, token)
+						.ConfigureAwait(false);
 
-				SourceManager.CompleteLoad(result);
+					SourceManager.CompleteLoad(result);
+				}
 #else
 				await Task.CompletedTask;
 #endif

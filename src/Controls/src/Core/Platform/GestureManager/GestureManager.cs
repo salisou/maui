@@ -13,9 +13,9 @@ namespace Microsoft.Maui.Controls.Platform
 	internal class GestureManager
 	{
 		readonly IControlsView _view;
-		object? _containerView;
-		object? _platformView;
-		object? _handler;
+		WeakReference? _containerView;
+		WeakReference? _platformView;
+		WeakReference? _handler;
 
 		public bool IsConnected => GesturePlatformManager != null;
 		public GesturePlatformManager? GesturePlatformManager { get; private set; }
@@ -64,9 +64,9 @@ namespace Microsoft.Maui.Controls.Platform
 				return;
 			}
 
-			if (_containerView != handler.ContainerView ||
-				_platformView != handler.PlatformView ||
-				_handler != handler)
+			if (_containerView?.Target != handler.ContainerView ||
+				_platformView?.Target != handler.PlatformView ||
+				_handler?.Target != handler)
 			{
 				DisconnectGestures();
 			}
@@ -76,9 +76,9 @@ namespace Microsoft.Maui.Controls.Platform
 				return;
 
 			GesturePlatformManager = new GesturePlatformManager(handler);
-			_handler = handler;
-			_containerView = handler.ContainerView;
-			_platformView = handler.PlatformView;
+			_handler = new WeakReference(handler);
+			_containerView = new WeakReference(handler.ContainerView);
+			_platformView = new WeakReference(handler.PlatformView);
 		}
 	}
 }

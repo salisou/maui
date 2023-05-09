@@ -46,5 +46,34 @@ namespace Microsoft.Maui.DeviceTests
 				await handler.ToPlatform().AssertContainsColor(Colors.Red, MauiContext);
 			});
 		}
+
+		[Fact("Image Does Not Leak")]
+		public async Task DoesNotLeak()
+		{
+			SetupBuilder();
+			WeakReference reference = null;
+
+			await InvokeOnMainThreadAsync(async () =>
+			{
+				var layout = new VerticalStackLayout();
+				var image = new Image
+				{
+					Background = Colors.Black,
+					Source = "red.png",
+				};
+				layout.Add(image);
+
+				var handler = CreateHandler<LayoutHandler>(layout);
+				await image.Wait();
+				reference = new WeakReference(image.Handler.PlatformView);
+			});
+
+			await Task.Yield();
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+
+			Assert.NotNull(reference);
+			Assert.False(reference.IsAlive, "PlatformView should not be alive!");
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 #if __IOS__
 using Foundation;
 #endif
@@ -594,6 +595,30 @@ namespace Microsoft.Maui.DeviceTests
 				label.FontSize = 64;
 				AssertEquivalentFont(handler, label.ToFont());
 			});
+		}
+
+		[Fact("Label Does Not Leak")]
+		public async Task DoesNotLeak()
+		{
+			SetupBuilder();
+			WeakReference reference = null;
+
+			await InvokeOnMainThreadAsync(() =>
+			{
+				var layout = new VerticalStackLayout();
+				var label = new Label { Text = "foo" };
+				layout.Add(label);
+
+				var handler = CreateHandler<LayoutHandler>(layout);
+				reference = new WeakReference(label.Handler.PlatformView);
+			});
+
+			await Task.Yield();
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+
+			Assert.NotNull(reference);
+			Assert.False(reference.IsAlive, "PlatformView should not be alive!");
 		}
 
 		Color TextColor(LabelHandler handler)
