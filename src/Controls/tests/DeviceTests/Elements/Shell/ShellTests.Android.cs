@@ -451,18 +451,18 @@ namespace Microsoft.Maui.DeviceTests
 			return (ShellFlyoutRenderer)shellContext.CurrentDrawerLayout;
 		}
 
-		RecyclerViewContainer GetFlyoutMenuReyclerView(ShellRenderer shellRenderer)
+		ShellRecyclerView GetFlyoutMenuReyclerView(ShellRenderer shellRenderer)
 		{
 			IShellContext shellContext = shellRenderer;
 			DrawerLayout dl = shellContext.CurrentDrawerLayout;
 
 			var flyout = dl.GetChildAt(0);
-			RecyclerViewContainer flyoutContainer = null;
+			ShellRecyclerView flyoutContainer = null;
 
 			if (dl.GetChildAt(1) is ViewGroup vg1 &&
-				vg1.GetChildAt(0) is RecyclerViewContainer rvc)
+				vg1.GetChildAt(0) is ShellRecyclerView rv)
 			{
-				flyoutContainer = rvc;
+				flyoutContainer = rv;
 			}
 
 			return flyoutContainer ?? throw new Exception("RecyclerView not found");
