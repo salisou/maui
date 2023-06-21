@@ -34,6 +34,7 @@ namespace Microsoft.Maui.DeviceTests
 					handlers.AddHandler<VerticalStackLayout, LayoutHandler>();
 					handlers.AddHandler<Grid, LayoutHandler>();
 					handlers.AddHandler<Label, LabelHandler>();
+					handlers.AddHandler<IContentView, ContentViewHandler>();
 				});
 			});
 		}
@@ -80,6 +81,61 @@ namespace Microsoft.Maui.DeviceTests
 			Assert.False(weakReference.IsAlive, "ObservableCollection should not be alive!");
 			Assert.NotNull(logicalChildren);
 			Assert.True(logicalChildren.Count <= 3, "_logicalChildren should not grow in size!");
+		}
+
+		[Fact(DisplayName = "CollectionView Does Not Leak")]
+		public async Task DoesNotLeak()
+		{
+			SetupBuilder();
+			bool first = true;
+			ContentView view = null;
+			WeakReference viewReference = null;
+			WeakReference handlerReference = null;
+			WeakReference platformReference = null;
+
+			var collectionView = new CollectionView
+			{
+				ItemTemplate = new DataTemplate(() =>
+				{
+					var v = new ContentView();
+					// Only save the first one
+					if (first)
+					{
+						first = false;
+						view = v;
+					}
+					return v;
+				}),
+				ItemsSource = new[] { "Item 1" },
+			};
+
+			var page = new ContentPage { Content = collectionView };
+			await CreateHandlerAndAddToWindow<PageHandler>(page, async _ =>
+			{
+				await Task.Delay(100);
+
+				Assert.NotNull(view);
+				viewReference = new(view);
+				handlerReference = new(view.Handler);
+				platformReference = new(view.Handler.PlatformView);
+				view = null;
+
+				collectionView.ItemsSource = new[] { "Item 2" };
+				await Task.Delay(100);
+				page.Content = null;
+
+				// Multiple GCs are sometimes required on iOS
+				for (int i = 0; i < 3; i++)
+				{
+					await Task.Yield();
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
+				}
+
+				Assert.False(viewReference.IsAlive, "View should not be alive!");
+				Assert.False(handlerReference.IsAlive, "Handler should not be alive!");
+				Assert.False(platformReference.IsAlive, "PlatformView should not be alive!");
+			});
 		}
 
 		[Theory]
