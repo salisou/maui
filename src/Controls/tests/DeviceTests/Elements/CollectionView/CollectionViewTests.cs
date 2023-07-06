@@ -41,36 +41,51 @@ namespace Microsoft.Maui.DeviceTests
 		[Fact]
 		public async Task ItemsSourceDoesNotLeak()
 		{
+			const int expectedSize = 3;
 			SetupBuilder();
 
 			IList logicalChildren = null;
 			WeakReference weakReference = null;
+
 			var collectionView = new CollectionView
 			{
-				ItemTemplate = new DataTemplate(() => new Label())
+				ItemTemplate = new DataTemplate(() => new Label { HeightRequest = 100 }),
 			};
+			var layout = new Grid { IgnoreSafeArea = true, HeightRequest = 500, WidthRequest = 500 };
+			layout.Add(collectionView);
 
-			await CreateHandlerAndAddToWindow<CollectionViewHandler>(collectionView, async handler =>
 			{
-				var data = new ObservableCollection<string>()
-				{
-					"Item 1",
-					"Item 2",
-					"Item 3"
-				};
-				weakReference = new WeakReference(data);
+				var data = new ObservableCollection<string>();
+				GenerateItems(expectedSize, data);
 				collectionView.ItemsSource = data;
-				await Task.Delay(100);
 
-				// Get ItemsView._logicalChildren
-				var flags = BindingFlags.NonPublic | BindingFlags.Instance;
-				logicalChildren = typeof(Element).GetField("_internalChildren", flags).GetValue(collectionView) as IList;
-				Assert.NotNull(logicalChildren);
+				var frame = collectionView.Frame;
+				await CreateHandlerAndAddToWindow<LayoutHandler>(layout, async handler =>
+				{
+					weakReference = new WeakReference(data);
 
-				// Replace with cloned collection
-				collectionView.ItemsSource = new ObservableCollection<string>(data);
-				await Task.Delay(100);
-			});
+					await WaitForUIUpdate(frame, collectionView);
+					frame = collectionView.Frame;
+
+					// Get ItemsView._logicalChildren
+					var flags = BindingFlags.NonPublic | BindingFlags.Instance;
+					logicalChildren = typeof(Element).GetField("_internalChildren", flags).GetValue(collectionView) as IList;
+					Assert.NotNull(logicalChildren);
+					Assert.Equal(data.Count, logicalChildren.Count);
+
+					// Replace with ObservableCollection, calling newCollection.Add()
+					var newCollection = new ObservableCollection<string>();
+					collectionView.ItemsSource = newCollection;
+					foreach (var item in data)
+					{
+						newCollection.Add(item);
+					}
+					await Task.Delay(100);
+					Assert.Equal(data.Count, logicalChildren.Count);
+				});
+
+				// data is out of scope here
+			}
 
 			await Task.Yield();
 			GC.Collect();
@@ -79,7 +94,7 @@ namespace Microsoft.Maui.DeviceTests
 			Assert.NotNull(weakReference);
 			Assert.False(weakReference.IsAlive, "ObservableCollection should not be alive!");
 			Assert.NotNull(logicalChildren);
-			Assert.True(logicalChildren.Count <= 3, "_logicalChildren should not grow in size!");
+			Assert.Equal(expectedSize, logicalChildren.Count);
 		}
 
 		[Theory]
