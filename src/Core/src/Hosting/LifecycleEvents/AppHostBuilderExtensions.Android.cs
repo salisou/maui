@@ -1,3 +1,4 @@
+using System;
 using AndroidX.AppCompat.App;
 using AndroidX.Window.Layout;
 using Microsoft.Maui.ApplicationModel;
@@ -42,19 +43,29 @@ namespace Microsoft.Maui.LifecycleEvents
 				})
 				.OnStop(activity =>
 				{
+					Console.WriteLine("OnStop in AppHostBuilder");
 					var window = activity.GetWindow();
+					Console.WriteLine($"Is window null?: {window is null}");
 
 					// Activity is no longer visible
+					Console.WriteLine($"AppHostBuilder calling Stopped: {window}");
 					window?.Stopped();
 
 					// As of Ice Cream Sandwich, Stopped is guaranteed to be called
 					// even when the activity is finishing or being destroyed
 					// We check for finishing and call destroying here if so
+					Console.WriteLine($"OnStop IsFinishing?: {activity.IsFinishing}");
 					if (activity.IsFinishing)
+					{
+						Console.WriteLine($"AppHostBuilder calling Destroying: {window}");
 						window?.Destroying();
+					}
 				})
 				.OnDestroy(activity =>
 				{
+					Console.WriteLine("OnDestroy in AppHostBuilder");
+					Console.WriteLine($"OnDestroy IsFinishing?: {activity.IsFinishing}");
+
 					// If the activity is being recreated from a configuration change
 					// or something like the inspector getting attached then
 					// IsFinishing will be set to false so we still need to call
@@ -62,6 +73,8 @@ namespace Microsoft.Maui.LifecycleEvents
 					if (!activity.IsFinishing)
 					{
 						var window = activity.GetWindow();
+						Console.WriteLine($"Is window null?: {window is null}");
+						Console.WriteLine($"AppHostBuilder calling Destroying: {window}");
 						window?.Destroying();
 					}
 				})
