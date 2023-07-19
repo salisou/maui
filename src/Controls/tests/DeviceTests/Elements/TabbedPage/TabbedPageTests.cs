@@ -290,6 +290,38 @@ namespace Microsoft.Maui.DeviceTests
 			});
 		}
 
+		[Fact(DisplayName = "Does Not Leak")]
+		public async Task DoesNotLeak()
+		{
+			SetupBuilder();
+			WeakReference pageReference = null;
+			var tabPage = new TabbedPage();
+			var page1 = new ContentPage { Title = "Page 1" };
+			tabPage.Children.Add(page1);
+
+			await CreateHandlerAndAddToWindow<WindowHandlerStub>(new Window(tabPage), async _ =>
+			{
+				await OnNavigatedToAsync(page1);
+
+				var page2 = new FooPage
+				{
+					Title = "Page 2"
+				};
+				pageReference = new WeakReference(page2);
+				tabPage.Children.Add(page2);
+				tabPage.SelectedItem = page2;
+				await OnNavigatedToAsync(page2);
+
+				tabPage.Children.Remove(page2);
+				tabPage.SelectedItem = page1;
+			});
+
+			await AssertionExtensions.WaitForGC(pageReference);
+			Assert.False(pageReference.IsAlive, "Page should not be alive!");
+		}
+
+		class FooPage : ContentPage { }
+
 		public class TabbedPagePivots : IEnumerable<object[]>
 		{
 			public IEnumerator<object[]> GetEnumerator()

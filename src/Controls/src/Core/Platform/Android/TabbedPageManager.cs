@@ -281,6 +281,7 @@ namespace Microsoft.Maui.Controls.Handlers
 			if (pager.Adapter is MultiPageFragmentStateAdapter<Page> adapter)
 			{
 				adapter.CountOverride = Element.Children.Count;
+				adapter.CheckItemKeys();
 			}
 
 			if (IsBottomTabPlacement)

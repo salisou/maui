@@ -75,7 +75,7 @@ namespace Microsoft.Maui.Controls.Platform
 			return null;
 		}
 
-		void CheckItemKeys()
+		internal void CheckItemKeys()
 		{
 			for (var i = keys.Count - 1; i >= 0; i--)
 			{
