@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.Content;
 using AndroidX.AppCompat.Widget;
+using MemoryAnalyzers.Attributes;
 
 namespace Microsoft.Maui.Platform
 {
@@ -10,6 +11,7 @@ namespace Microsoft.Maui.Platform
 		{
 		}
 
+		[SafeEvent("Android-only type. MauiTextView should have the same lifetime as subscribers: Label.")]
 		internal event EventHandler<LayoutChangedEventArgs>? LayoutChanged;
 
 		protected override void OnLayout(bool changed, int l, int t, int r, int b)
