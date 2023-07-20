@@ -1669,6 +1669,8 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 			_viewHandlerWrapper.DisconnectHandler();
 		}
 
+		void IElementHandler.OnWindowChanged(object oldValue, object newValue) { }
+
 		internal class MauiControlsNavigationBar : UINavigationBar
 		{
 			[Microsoft.Maui.Controls.Internals.Preserve(Conditional = true)]

@@ -340,5 +340,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 
 			_disposed = true;
 		}
+
+		void IElementHandler.OnWindowChanged(object oldValue, object newValue) { }
 	}
 }

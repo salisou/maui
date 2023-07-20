@@ -10,19 +10,15 @@ namespace Microsoft.Maui.Platform
 		readonly UIDatePicker _picker;
 
 #if !MACCATALYST
-		readonly Action _dateSelected;
-		public MauiTimePicker(Action dateSelected)
-#else
-		public MauiTimePicker()
+		// NOTE: keep the Action alive as long as MauiTimePicker
+		readonly Action _onDone;
 #endif
+
+		public MauiTimePicker()
 		{
 			BorderStyle = UITextBorderStyle.RoundedRect;
 
 			_picker = new UIDatePicker { Mode = UIDatePickerMode.Time, TimeZone = new NSTimeZone("UTC") };
-
-#if !MACCATALYST
-			_dateSelected = dateSelected;
-#endif
 
 			if (OperatingSystem.IsIOSVersionAtLeast(14))
 			{
@@ -32,10 +28,10 @@ namespace Microsoft.Maui.Platform
 			InputView = _picker;
 
 #if !MACCATALYST
-			InputAccessoryView = new MauiDoneAccessoryView(() =>
+			InputAccessoryView = new MauiDoneAccessoryView(_onDone = () =>
 			{
 				DateSelected?.Invoke(this, EventArgs.Empty);
-				_dateSelected?.Invoke();
+				ResignFirstResponder();
 			});
 
 			InputAccessoryView.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;

@@ -1663,7 +1663,6 @@ Microsoft.Maui.Platform.MauiTextView.VerticalTextAlignment.set -> void
 Microsoft.Maui.Platform.MauiTimePicker
 Microsoft.Maui.Platform.MauiTimePicker.Date.get -> Foundation.NSDate!
 Microsoft.Maui.Platform.MauiTimePicker.DateSelected -> System.EventHandler?
-Microsoft.Maui.Platform.MauiTimePicker.MauiTimePicker(System.Action! dateSelected) -> void
 Microsoft.Maui.Platform.MauiTimePicker.Picker.get -> UIKit.UIDatePicker!
 Microsoft.Maui.Platform.MauiTimePicker.UpdateTime(System.TimeSpan time) -> void
 Microsoft.Maui.Platform.MauiView

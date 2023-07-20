@@ -130,5 +130,7 @@ namespace Microsoft.Maui.Handlers
 				DisconnectHandler(oldPlatformView);
 			}
 		}
+
+		public virtual void OnWindowChanged(object? oldValue, object? newValue) { }
 	}
 }

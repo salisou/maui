@@ -90,5 +90,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 		{
 			UpdateNativeWidget();
 		}
+
+		void IElementHandler.OnWindowChanged(object? oldValue, object? newValue) { }
 	}
 }

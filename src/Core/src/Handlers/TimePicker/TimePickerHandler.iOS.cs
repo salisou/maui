@@ -7,11 +7,7 @@ namespace Microsoft.Maui.Handlers
 	{
 		protected override MauiTimePicker CreatePlatformView()
 		{
-			return new MauiTimePicker(() =>
-			{
-				SetVirtualViewTime();
-				PlatformView?.ResignFirstResponder();
-			});
+			return new MauiTimePicker();
 		}
 
 		internal bool UpdateImmediately { get; set; }
@@ -20,33 +16,37 @@ namespace Microsoft.Maui.Handlers
 		{
 			base.ConnectHandler(platformView);
 
-			if (platformView != null)
-			{
-				platformView.EditingDidBegin += OnStarted;
-				platformView.EditingDidEnd += OnEnded;
-				platformView.ValueChanged += OnValueChanged;
-				platformView.DateSelected += OnDateSelected;
-				platformView.Picker.ValueChanged += OnValueChanged;
-
-				platformView.UpdateTime(VirtualView.Time);
-			}
+			platformView?.UpdateTime(VirtualView.Time);
 		}
 
 		protected override void DisconnectHandler(MauiTimePicker platformView)
 		{
 			base.DisconnectHandler(platformView);
 
-			if (platformView != null)
-			{
-				platformView.RemoveFromSuperview();
+			platformView?.RemoveFromSuperview();
+		}
 
+		public override void OnWindowChanged(object? oldValue, object? newValue)
+		{
+			var platformView = PlatformView;
+			if (platformView is null)
+				return;
+
+			if (newValue is null)
+			{
+				platformView.EditingDidBegin += OnStarted;
+				platformView.EditingDidEnd += OnEnded;
+				platformView.ValueChanged += OnValueChanged;
+				platformView.DateSelected += OnDateSelected;
+				platformView.Picker.ValueChanged += OnValueChanged;
+			}
+			else
+			{
 				platformView.EditingDidBegin -= OnStarted;
 				platformView.EditingDidEnd -= OnEnded;
 				platformView.ValueChanged -= OnValueChanged;
 				platformView.DateSelected -= OnDateSelected;
 				platformView.Picker.ValueChanged -= OnValueChanged;
-
-				platformView.Dispose();
 			}
 		}
 

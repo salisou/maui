@@ -396,5 +396,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 		void IElementHandler.DisconnectHandler()
 		{
 		}
+
+		void IElementHandler.OnWindowChanged(object oldValue, object newValue) { }
 	}
 }

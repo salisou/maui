@@ -70,5 +70,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 
 			SetMeasuredDimension(0, 0);
 		}
+
+		void IElementHandler.OnWindowChanged(object? oldValue, object? newValue) { }
 	}
 }

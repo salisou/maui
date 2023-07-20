@@ -1877,6 +1877,7 @@ namespace Microsoft.Maui.Controls
 			visualElement.UpdatePlatformUnloadedLoadedWiring(newWindow, oldWindow);
 			visualElement.InvalidateStateTriggers(newValue != null);
 			visualElement._windowChanged?.Invoke(visualElement, EventArgs.Empty);
+			visualElement.Handler?.OnWindowChanged(oldValue, newValue);
 		}
 
 		void OnWindowHandlerChanged(object? sender, EventArgs e)

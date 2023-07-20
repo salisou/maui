@@ -12,6 +12,8 @@
 
 		void DisconnectHandler();
 
+		void OnWindowChanged(object? oldValue, object? newValue);
+
 		object? PlatformView { get; }
 
 		IElement? VirtualView { get; }
