@@ -39,6 +39,7 @@
 		public const string SwipeView = "SwipeView";
 		public const string TabbedPage = "TabbedPage";
 		public const string TextInput = "TextInput";
+		public const string TimePicker = "TimePicker";
 		public const string Toolbar = "Toolbar";
 		public const string TemplatedView = "TemplatedView";
 		public const string View = "View";

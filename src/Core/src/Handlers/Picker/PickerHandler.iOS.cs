@@ -10,13 +10,16 @@ namespace Microsoft.Maui.Handlers
 		UIPickerView? _pickerView;
 
 #if !MACCATALYST
+		// NOTE: keep the Action alive as long as PickerHandler
+		Action? _onDone;
+
 		protected override MauiPicker CreatePlatformView()
 		{
 			_pickerView = new UIPickerView();
 
 			var platformPicker = new MauiPicker(_pickerView) { BorderStyle = UITextBorderStyle.RoundedRect };
 			platformPicker.InputView = _pickerView;
-			platformPicker.InputAccessoryView = new MauiDoneAccessoryView(() =>
+			platformPicker.InputAccessoryView = new MauiDoneAccessoryView(_onDone ??= () =>
 			{
 				FinishSelectItem(_pickerView, platformPicker);
 			});

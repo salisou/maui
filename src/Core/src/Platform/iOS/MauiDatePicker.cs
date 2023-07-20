@@ -7,6 +7,9 @@ namespace Microsoft.Maui.Platform
 	public class MauiDatePicker : NoCaretField
 	{
 #if !MACCATALYST
+		// NOTE: keep the Action alive as long as MauiDatePicker
+		readonly Action<object> _onDone;
+
 		public MauiDatePicker()
 		{
 			BorderStyle = UITextBorderStyle.RoundedRect;
@@ -22,7 +25,7 @@ namespace Microsoft.Maui.Platform
 			this.InputAccessoryView = accessoryView;
 
 			accessoryView.SetDataContext(this);
-			accessoryView.SetDoneClicked(OnDoneClicked);
+			accessoryView.SetDoneClicked(_onDone = OnDoneClicked);
 
 			this.InputView.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
 			this.InputAccessoryView.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;

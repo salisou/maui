@@ -10,6 +10,10 @@ namespace Microsoft.Maui.Handlers
 	public partial class EditorHandler : ViewHandler<IEditor, MauiTextView>
 	{
 		bool _set;
+#if !MACCATALYST
+		// NOTE: keep the Action alive as long as EditorHandler
+		Action<object>? _onDone;
+#endif
 
 		protected override MauiTextView CreatePlatformView()
 		{
@@ -18,7 +22,7 @@ namespace Microsoft.Maui.Handlers
 #if !MACCATALYST
 			var accessoryView = new MauiDoneAccessoryView();
 			accessoryView.SetDataContext(this);
-			accessoryView.SetDoneClicked(OnDoneClicked);
+			accessoryView.SetDoneClicked(_onDone ??= OnDoneClicked);
 			platformEditor.InputAccessoryView = accessoryView;
 #endif
 

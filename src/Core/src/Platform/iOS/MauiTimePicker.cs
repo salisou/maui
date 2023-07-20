@@ -1,28 +1,25 @@
 ﻿using System;
 using Foundation;
 using UIKit;
-using RectangleF = CoreGraphics.CGRect;
 
 namespace Microsoft.Maui.Platform
 {
 	public class MauiTimePicker : NoCaretField
 	{
 		readonly UIDatePicker _picker;
+		readonly WeakReference<ITimePicker> _virtualView;
 
 #if !MACCATALYST
-		readonly Action _dateSelected;
-		public MauiTimePicker(Action dateSelected)
-#else
-		public MauiTimePicker()
+		// NOTE: keep the Action alive as long as MauiTimePicker
+		readonly Action _onDone;
 #endif
+
+		public MauiTimePicker(ITimePicker virtualView)
 		{
+			_virtualView = new(virtualView);
 			BorderStyle = UITextBorderStyle.RoundedRect;
 
 			_picker = new UIDatePicker { Mode = UIDatePickerMode.Time, TimeZone = new NSTimeZone("UTC") };
-
-#if !MACCATALYST
-			_dateSelected = dateSelected;
-#endif
 
 			if (OperatingSystem.IsIOSVersionAtLeast(14))
 			{
@@ -32,10 +29,10 @@ namespace Microsoft.Maui.Platform
 			InputView = _picker;
 
 #if !MACCATALYST
-			InputAccessoryView = new MauiDoneAccessoryView(() =>
+			InputAccessoryView = new MauiDoneAccessoryView(_onDone = () =>
 			{
-				DateSelected?.Invoke(this, EventArgs.Empty);
-				_dateSelected?.Invoke();
+				SetVirtualViewTime();
+				ResignFirstResponder();
 			});
 
 			InputAccessoryView.AutoresizingMask = UIViewAutoresizing.FlexibleHeight;
@@ -47,15 +44,51 @@ namespace Microsoft.Maui.Platform
 			InputAssistantItem.TrailingBarButtonGroups = null;
 
 			AccessibilityTraits = UIAccessibilityTrait.Button;
+
+			EditingDidBegin += OnEditingDidBegin;
+			EditingDidEnd += OnEditingDidEnd;
+			ValueChanged += OnValueChanged;
+			_picker.ValueChanged += OnValueChanged;
+		}
+
+		void OnEditingDidBegin(object? sender, EventArgs e)
+		{
+			if (_virtualView.TryGetTarget(out var v))
+				v.IsFocused = true;
+		}
+
+		void OnEditingDidEnd(object? sender, EventArgs e)
+		{
+			if (_virtualView.TryGetTarget(out var v))
+				v.IsFocused = false;
+		}
+
+		void OnValueChanged(object? sender, EventArgs e)
+		{
+			if (UpdateImmediately)  // Platform Specific
+				SetVirtualViewTime();
+		}
+
+		void OnDateSelected(object? sender, EventArgs e)
+		{
+			SetVirtualViewTime();
+		}
+
+		void SetVirtualViewTime()
+		{
+			if (_virtualView.TryGetTarget(out var v))
+			{
+				var datetime = Date.ToDateTime();
+				v.Time = new TimeSpan(datetime.Hour, datetime.Minute, 0);
+			}
 		}
 
 		public UIDatePicker Picker => _picker;
 
 		public NSDate Date => Picker.Date;
 
-#if !MACCATALYST
-		public event EventHandler? DateSelected;
-#endif
+		internal bool UpdateImmediately { get; set; }
+
 		public void UpdateTime(TimeSpan time)
 		{
 			_picker.Date = new DateTime(1, 1, 1, time.Hours, time.Minutes, time.Seconds).ToNSDate();

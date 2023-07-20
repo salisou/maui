@@ -7,47 +7,27 @@ namespace Microsoft.Maui.Handlers
 	{
 		protected override MauiTimePicker CreatePlatformView()
 		{
-			return new MauiTimePicker(() =>
-			{
-				SetVirtualViewTime();
-				PlatformView?.ResignFirstResponder();
-			});
+			return new MauiTimePicker(VirtualView);
 		}
 
-		internal bool UpdateImmediately { get; set; }
+		internal bool UpdateImmediately
+		{
+			get => PlatformView.UpdateImmediately;
+			set => PlatformView.UpdateImmediately = value;
+		}
 
 		protected override void ConnectHandler(MauiTimePicker platformView)
 		{
 			base.ConnectHandler(platformView);
 
-			if (platformView != null)
-			{
-				platformView.EditingDidBegin += OnStarted;
-				platformView.EditingDidEnd += OnEnded;
-				platformView.ValueChanged += OnValueChanged;
-				platformView.DateSelected += OnDateSelected;
-				platformView.Picker.ValueChanged += OnValueChanged;
-
-				platformView.UpdateTime(VirtualView.Time);
-			}
+			platformView?.UpdateTime(VirtualView.Time);
 		}
 
 		protected override void DisconnectHandler(MauiTimePicker platformView)
 		{
 			base.DisconnectHandler(platformView);
 
-			if (platformView != null)
-			{
-				platformView.RemoveFromSuperview();
-
-				platformView.EditingDidBegin -= OnStarted;
-				platformView.EditingDidEnd -= OnEnded;
-				platformView.ValueChanged -= OnValueChanged;
-				platformView.DateSelected -= OnDateSelected;
-				platformView.Picker.ValueChanged -= OnValueChanged;
-
-				platformView.Dispose();
-			}
+			platformView?.RemoveFromSuperview();
 		}
 
 		public static void MapFormat(ITimePickerHandler handler, ITimePicker timePicker)
@@ -81,38 +61,6 @@ namespace Microsoft.Maui.Handlers
 		{
 			handler.PlatformView?.UpdateFlowDirection(timePicker);
 			handler.PlatformView?.UpdateTextAlignment(timePicker);
-		}
-
-		void OnStarted(object? sender, EventArgs eventArgs)
-		{
-			if (VirtualView is not null)
-				VirtualView.IsFocused = true;
-		}
-
-		void OnEnded(object? sender, EventArgs eventArgs)
-		{
-			if (VirtualView is not null)
-				VirtualView.IsFocused = false;
-		}
-
-		void OnValueChanged(object? sender, EventArgs e)
-		{
-			if (UpdateImmediately)  // Platform Specific
-				SetVirtualViewTime();
-		}
-
-		void OnDateSelected(object? sender, EventArgs e)
-		{
-			SetVirtualViewTime();
-		}
-
-		void SetVirtualViewTime()
-		{
-			if (VirtualView == null || PlatformView == null)
-				return;
-
-			var datetime = PlatformView.Date.ToDateTime();
-			VirtualView.Time = new TimeSpan(datetime.Hour, datetime.Minute, 0);
 		}
 	}
 #endif
