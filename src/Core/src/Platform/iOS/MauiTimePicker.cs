@@ -51,27 +51,28 @@ namespace Microsoft.Maui.Platform
 			_picker.ValueChanged += OnValueChanged;
 		}
 
-		void OnEditingDidBegin(object? sender, EventArgs e)
+		static void OnEditingDidBegin(object? sender, EventArgs e)
 		{
-			if (_virtualView.TryGetTarget(out var v))
+			if (sender is MauiTimePicker @this && @this._virtualView.TryGetTarget(out var v))
 				v.IsFocused = true;
 		}
 
-		void OnEditingDidEnd(object? sender, EventArgs e)
+		static void OnEditingDidEnd(object? sender, EventArgs e)
 		{
-			if (_virtualView.TryGetTarget(out var v))
+			if (sender is MauiTimePicker @this && @this._virtualView.TryGetTarget(out var v))
 				v.IsFocused = false;
 		}
 
-		void OnValueChanged(object? sender, EventArgs e)
+		static void OnValueChanged(object? sender, EventArgs e)
 		{
-			if (UpdateImmediately)  // Platform Specific
-				SetVirtualViewTime();
+			if (sender is MauiTimePicker @this && @this.UpdateImmediately)  // Platform Specific
+				@this.SetVirtualViewTime();
 		}
 
-		void OnDateSelected(object? sender, EventArgs e)
+		static void OnDateSelected(object? sender, EventArgs e)
 		{
-			SetVirtualViewTime();
+			if (sender is MauiTimePicker @this)
+				@this.SetVirtualViewTime();
 		}
 
 		void SetVirtualViewTime()
