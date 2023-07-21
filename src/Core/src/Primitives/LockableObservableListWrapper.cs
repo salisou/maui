@@ -14,14 +14,14 @@ namespace Microsoft.Maui
 	{
 		public readonly ObservableCollection<string> _list = new ObservableCollection<string>();
 
-		[SafeEvent("This event is the same as the underlying ObservableCollection<T>.")]
+		[MemoryLeakSafe("This event is the same as the underlying ObservableCollection<T>.")]
 		event NotifyCollectionChangedEventHandler? INotifyCollectionChanged.CollectionChanged
 		{
 			add { ((INotifyCollectionChanged)_list).CollectionChanged += value; }
 			remove { ((INotifyCollectionChanged)_list).CollectionChanged -= value; }
 		}
 
-		[SafeEvent("This event is the same as the underlying ObservableCollection<T>.")]
+		[MemoryLeakSafe("This event is the same as the underlying ObservableCollection<T>.")]
 		event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
 		{
 			add { ((INotifyPropertyChanged)_list).PropertyChanged += value; }

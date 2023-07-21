@@ -11,7 +11,7 @@ namespace Microsoft.Maui.Platform
 		{
 		}
 
-		[SafeEvent("Android-only type. MauiTextView should have the same lifetime as subscribers: Label.")]
+		[MemoryLeakSafe("Android-only type. MauiTextView should have the same lifetime as subscribers: Label.")]
 		internal event EventHandler<LayoutChangedEventArgs>? LayoutChanged;
 
 		protected override void OnLayout(bool changed, int l, int t, int r, int b)
