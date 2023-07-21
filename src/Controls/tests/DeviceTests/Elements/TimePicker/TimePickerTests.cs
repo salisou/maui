@@ -16,6 +16,7 @@ namespace Microsoft.Maui.DeviceTests
 			{
 				builder.ConfigureMauiHandlers(handlers =>
 				{
+					handlers.AddHandler<Layout, LayoutHandler>();
 					handlers.AddHandler<TimePicker, TimePickerHandler>();
 				});
 			});
@@ -29,16 +30,17 @@ namespace Microsoft.Maui.DeviceTests
 			WeakReference platformViewReference = null;
 			WeakReference handlerReference = null;
 
-			await InvokeOnMainThreadAsync(() =>
 			{
 				var layout = new Grid();
 				var picker = new TimePicker();
 				layout.Add(picker);
-				var handler = CreateHandler<LayoutHandler>(layout);
-				viewReference = new WeakReference(handler);
-				handlerReference = new WeakReference(picker.Handler);
-				platformViewReference = new WeakReference(picker.Handler.PlatformView);
-			});
+				await CreateHandlerAndAddToWindow<LayoutHandler>(layout, handler =>
+				{
+					viewReference = new WeakReference(picker);
+					handlerReference = new WeakReference(picker.Handler);
+					platformViewReference = new WeakReference(picker.Handler.PlatformView);
+				});
+			}
 
 			await AssertionExtensions.WaitForGC(viewReference, handlerReference, platformViewReference);
 			Assert.False(viewReference.IsAlive, "TimePicker should not be alive!");
