@@ -35,7 +35,7 @@ namespace Microsoft.Maui.DeviceTests
 				var picker = new TimePicker();
 				layout.Add(picker);
 				var handler = CreateHandler<LayoutHandler>(layout);
-				viewReference = new WeakReference(handler);
+				viewReference = new WeakReference(picker);
 				handlerReference = new WeakReference(picker.Handler);
 				platformViewReference = new WeakReference(picker.Handler.PlatformView);
 			});
