@@ -51,29 +51,27 @@ namespace Microsoft.Maui.Platform
 			_picker.ValueChanged += OnValueChanged;
 		}
 
-		static void OnEditingDidBegin(object? sender, EventArgs e)
+		void OnEditingDidBegin(object? sender, EventArgs e)
 		{
-			if (sender is MauiTimePicker @this && @this._virtualView.TryGetTarget(out var v))
+			if (_virtualView.TryGetTarget(out var v))
 				v.IsFocused = true;
 		}
 
-		static void OnEditingDidEnd(object? sender, EventArgs e)
+		void OnEditingDidEnd(object? sender, EventArgs e)
 		{
-			if (sender is MauiTimePicker @this && @this._virtualView.TryGetTarget(out var v))
+			if (_virtualView.TryGetTarget(out var v))
 				v.IsFocused = false;
 		}
 
+		// Needs to be static to void a memory leak:
+		// https://github.com/jonathanpeppers/MemoryLeaksOniOS#case-2-c-events
 		static void OnValueChanged(object? sender, EventArgs e)
 		{
 			if (sender is MauiTimePicker @this && @this.UpdateImmediately)  // Platform Specific
 				@this.SetVirtualViewTime();
 		}
 
-		static void OnDateSelected(object? sender, EventArgs e)
-		{
-			if (sender is MauiTimePicker @this)
-				@this.SetVirtualViewTime();
-		}
+		void OnDateSelected(object? sender, EventArgs e) => SetVirtualViewTime();
 
 		void SetVirtualViewTime()
 		{
